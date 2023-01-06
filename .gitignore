@@ -1,0 +1,23 @@
+# Compilación
+build/
+
+# Archivos generados por IDEs
+.idea/
+*.iml
+
+# Archivos generados por Maven
+/target/
+
+# Archivos generados por Gradle
+.gradle/
+build/
+
+# Archivos de configuración de carga de dependencias
+.classpath
+.project
+
+# Archivos de configuración de Eclipse
+.settings/
+
+# Archivos de configuración de JUnit
+.metadata
