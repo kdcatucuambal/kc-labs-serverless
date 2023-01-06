@@ -21,3 +21,5 @@ build/
 
 # Archivos de configuración de JUnit
 .metadata
+
+.aws-sam/

@@ -13,7 +13,7 @@ Globals:
     TracingEnabled: True
 
 Resources:
-  HelloWorldFunction:
+  LabsGreetingsGETHelloLambda:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: kc-labs-app
@@ -25,10 +25,30 @@ Resources:
       Environment:
         Variables:
           PARAM1: VALUE
-          JAVA_TOOL_OPTIONS:
+          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
       Events:
         LabsGreetingsGETHelloApi:
           Type: Api
           Properties:
             Path: /labs/greetings/hello
+            Method: get
+
+  LabsGreetingGETNameLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: kc-labs-app
+      Handler: com.kc.cloud.labs.aws.lambda.greetings.LabsGreetingGETName::handleRequest
+      Runtime: java11
+      Architectures:
+        - x86_64
+      MemorySize: 512
+      Environment:
+        Variables:
+          PARAM1: VALUE
+          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+      Events:
+        LabsGreetingGETNameApi:
+          Type: Api
+          Properties:
+            Path: /labs/greetings/name
             Method: get

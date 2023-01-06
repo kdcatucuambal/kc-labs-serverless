@@ -12,9 +12,12 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.logging.Logger;
 
 public class LabsGreetingsGETHello implements RequestHandler<
         APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+
+    private static final Logger logger = Logger.getLogger(LabsGreetingsGETHello.class.getName());
 
     @Override
     public APIGatewayProxyResponseEvent handleRequest(
@@ -22,6 +25,7 @@ public class LabsGreetingsGETHello implements RequestHandler<
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
         headers.put("X-Custom-Header", "application/json");
+        logger.info("LabsGreetingsGETHello.handleRequest() invoked");
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent()
                 .withHeaders(headers);
         try {
