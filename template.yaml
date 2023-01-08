@@ -5,10 +5,21 @@ Description: >
 
   Sample SAM Template for kc-labs-serverless
 
+Parameters:
+  LambdaPath:
+    Type: String
+    Description: Path to the Lambda function code
+    Default: /labs/greetings
+
 Globals:
   Function:
+    CodeUri: kc-labs-app
     Timeout: 20
     Tracing: Active
+    Runtime: java11
+    MemorySize: 512
+    Architectures:
+      - x86_64
   Api:
     TracingEnabled: True
 
@@ -18,10 +29,6 @@ Resources:
     Properties:
       CodeUri: kc-labs-app
       Handler: com.kc.cloud.labs.aws.lambda.greetings.LabsGreetingsGETHello::handleRequest
-      Runtime: java11
-      Architectures:
-        - x86_64
-      MemorySize: 512
       Environment:
         Variables:
           PARAM1: VALUE
@@ -30,18 +37,14 @@ Resources:
         LabsGreetingsGETHelloApi:
           Type: Api
           Properties:
-            Path: /labs/greetings/hello
+            Path: !Sub ${LambdaPath}/hello
             Method: get
 
   LabsGreetingGETNameLambda:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: kc-labs-app
       Handler: com.kc.cloud.labs.aws.lambda.greetings.LabsGreetingGETName::handleRequest
-      Runtime: java11
-      Architectures:
-        - x86_64
-      MemorySize: 512
+      FunctionName: !Sub ${AWS::StackName}-LabsGreetingGETNameLambda
       Environment:
         Variables:
           PARAM1: VALUE
@@ -50,5 +53,5 @@ Resources:
         LabsGreetingGETNameApi:
           Type: Api
           Properties:
-            Path: /labs/greetings/name
+            Path: !Sub ${LambdaPath}/name
             Method: get
