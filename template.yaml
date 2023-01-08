@@ -5,12 +5,6 @@ Description: >
 
   Sample SAM Template for kc-labs-serverless
 
-Parameters:
-  LambdaPath:
-    Type: String
-    Description: Path to the Lambda function code
-    Default: /labs/greetings
-
 Globals:
   Function:
     CodeUri: kc-labs-app
@@ -24,6 +18,10 @@ Globals:
     TracingEnabled: True
 
 Resources:
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: v1
   LabsGreetingsGETHelloLambda:
     Type: AWS::Serverless::Function
     Properties:
@@ -34,11 +32,12 @@ Resources:
           PARAM1: VALUE
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
       Events:
-        LabsGreetingsGETHelloApi:
+        EventApi:
           Type: Api
           Properties:
-            Path: !Sub ${LambdaPath}/hello
+            Path: /labs/greetings/hello
             Method: get
+            RestApiId: !Ref ApiGatewayApi
 
   LabsGreetingGETNameLambda:
     Type: AWS::Serverless::Function
@@ -50,8 +49,9 @@ Resources:
           PARAM1: VALUE
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
       Events:
-        LabsGreetingGETNameApi:
+        EventApi:
           Type: Api
           Properties:
-            Path: !Sub ${LambdaPath}/name
+            Path: /labs/greetings/name
             Method: get
+            RestApiId: !Ref ApiGatewayApi
