@@ -7,48 +7,52 @@ Description: >
 
 Globals:
   Function:
+    CodeUri: kc-labs-app
     Timeout: 20
     Tracing: Active
+    Runtime: java11
+    MemorySize: 512
+    Architectures:
+      - x86_64
   Api:
     TracingEnabled: True
 
 Resources:
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: v1
   LabsGreetingsGETHelloLambda:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: kc-labs-app
       Handler: com.kc.cloud.labs.aws.lambda.greetings.LabsGreetingsGETHello::handleRequest
-      Runtime: java11
-      Architectures:
-        - x86_64
-      MemorySize: 512
+      FunctionName: !Sub ${AWS::StackName}-LabsGreetingsGETHelloLambda
       Environment:
         Variables:
           PARAM1: VALUE
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
       Events:
-        LabsGreetingsGETHelloApi:
+        EventApi:
           Type: Api
           Properties:
             Path: /labs/greetings/hello
             Method: get
+            RestApiId: !Ref ApiGatewayApi
 
   LabsGreetingGETNameLambda:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: kc-labs-app
       Handler: com.kc.cloud.labs.aws.lambda.greetings.LabsGreetingGETName::handleRequest
-      Runtime: java11
-      Architectures:
-        - x86_64
-      MemorySize: 512
+      FunctionName: !Sub ${AWS::StackName}-LabsGreetingGETNameLambda
       Environment:
         Variables:
           PARAM1: VALUE
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
       Events:
-        LabsGreetingGETNameApi:
+        EventApi:
           Type: Api
           Properties:
             Path: /labs/greetings/name
             Method: get
+            RestApiId: !Ref ApiGatewayApi
