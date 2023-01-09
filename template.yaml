@@ -27,6 +27,7 @@ Resources:
     Properties:
       CodeUri: kc-labs-app
       Handler: com.kc.cloud.labs.aws.lambda.greetings.LabsGreetingsGETHello::handleRequest
+      FunctionName: !Sub ${AWS::StackName}-LabsGreetingsGETHelloLambda
       Environment:
         Variables:
           PARAM1: VALUE
