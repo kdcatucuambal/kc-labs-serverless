@@ -28,6 +28,9 @@ public class LabsGreetingsGETHello implements RequestHandler<
         logger.info("LabsGreetingsGETHello.handleRequest() invoked");
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent()
                 .withHeaders(headers);
+
+        System.out.println("ApiId:" + apiGatewayProxyRequestEvent);
+
         try {
             final String pageContents = this.getPageContents("https://checkip.amazonaws.com");
             String output = String.format("{ \"message\": \"hello world\", \"location\": \"%s\" }", pageContents);

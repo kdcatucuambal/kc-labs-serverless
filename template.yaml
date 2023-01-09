@@ -22,6 +22,12 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: v1
+      DefinitionBody:
+        Fn::Transform:
+          Name: AWS::Include
+          Parameters:
+            Location: ./specs/labs_api.yaml
+
   LabsGreetingsGETHelloLambda:
     Type: AWS::Serverless::Function
     Properties:
@@ -40,19 +46,19 @@ Resources:
             Method: get
             RestApiId: !Ref ApiGatewayApi
 
-  LabsGreetingGETNameLambda:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: com.kc.cloud.labs.aws.lambda.greetings.LabsGreetingGETName::handleRequest
-      FunctionName: !Sub ${AWS::StackName}-LabsGreetingGETNameLambda
-      Environment:
-        Variables:
-          PARAM1: VALUE
-          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
-      Events:
-        EventApi:
-          Type: Api
-          Properties:
-            Path: /labs/greetings/name
-            Method: get
-            RestApiId: !Ref ApiGatewayApi
+  # LabsGreetingGETNameLambda:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     Handler: com.kc.cloud.labs.aws.lambda.greetings.LabsGreetingGETName::handleRequest
+  #     FunctionName: !Sub ${AWS::StackName}-LabsGreetingGETNameLambda
+  #     Environment:
+  #       Variables:
+  #         PARAM1: VALUE
+  #         JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+  #     Events:
+  #       EventApi:
+  #         Type: Api
+  #         Properties:
+  #           Path: /labs/greetings/name
+  #           Method: get
+  #           RestApiId: !Ref ApiGatewayApi

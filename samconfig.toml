@@ -2,9 +2,9 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "kc-labs"
+stack_name = "dev-kec-labs"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1bj1yglddqpax"
-s3_prefix = "kc-labs"
+s3_prefix = "dev-kec-labs"
 region = "us-east-2"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"

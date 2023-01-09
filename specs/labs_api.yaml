@@ -1,6 +1,7 @@
 openapi: 3.0.0
 info:
-  title: !Sub Labs API Sample - ${AWS::StackName}
+  title: 
+    Fn::Sub: Labs API Sample - ${AWS::StackName}
   version: 0.0.1
   description: |
     This is a sample api labs using Java
@@ -19,46 +20,42 @@ paths:
       summary: Returns a hello message with IP address
       description: Returns a hello message with IP address
       operationId: LabsGreetingsGETHello
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The hello message
+                  location:
+                    type: string
+                    description: The IP address
       x-amazon-apigateway-integration:
         httpMethod: POST
         type: aws
         timeoutInMillis: 20000
-        uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsGreetingsGETHelloLambda.Arn}/invocations
+        uri: 
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsGreetingsGETHelloLambda.Arn}/invocations
         passThroughBehavior: when_no_templates
         requestTemplates:
-          application/json: |
+          application/json: |-
             {
-              "header": {
-                "aws_request_id": "$context.requestId",
-                "x_authotization": "$input.params.header.get('token')"
-              },
-              "body": $input.json('$'),
-              "getbody": {
-                "queries":{
-                  #foreach($param in $input.params().querystring.keySet())
-                  "$param": "$util.escapeJavaScript($input.params().querystring.get($param))"#if($foreach.hasNext),#end
-                  #end
-                },
-                "params": {
-                  #foreach($param in $input.params().path.keySet())
-                  "$param": "$util.escapeJavaScript($input.params().path.get($param))"#if($foreach.hasNext),#end
-                  #end
-                }
-              },
-              "service": {
-                "apiId": "$context.apiId",
-                "operationId": "LabsGreetingsGETHello",
-                "successfull": "200",
+              "headers": {
+                #foreach($param in $input.params().header.keySet())
+                "$param": "$util.escapeJavaScript($input.params().header.get($param))" #if($foreach.hasNext),#end
+                #end
               }
             }
-
         responses:
           default:
             statusCode: 200
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
-              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-              responseTemplates:
-                application/json: |
-                  $input.json('$.body')
+            responseTemplates:
+              application/json: |-
+                #set($data = $util.parseJson($input.json('$.body')))
+                $data
+               
+        
