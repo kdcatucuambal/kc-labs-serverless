@@ -4,6 +4,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,18 +33,41 @@ public class LabsGreetingsGETHello implements RequestHandler<
 
         System.out.println("ApiId:" + apiGatewayProxyRequestEvent);
 
+        HashMap<String, CustomDependency> deps = new HashMap<>();
+        deps.put("rds", new CustomDependency("RDS", "jdbc:mysql://localhost:3306/"));
+        deps.put("s3", new CustomDependency("S3", "https://s3.amazonaws.com/"));
+        deps.put("dynamodb", new CustomDependency("DynamoDB", "https://dynamodb.us-east-1.amazonaws.com/"));
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonResponse = null;
         try {
-            final String pageContents = this.getPageContents("https://checkip.amazonaws.com");
-            String output = String.format("{ \"message\": \"hello world\", \"location\": \"%s\" }", pageContents);
-
-            return response
-                    .withStatusCode(200)
-                    .withBody(output);
-        } catch (IOException e) {
-            return response
-                    .withBody("{}")
-                    .withStatusCode(500);
+            jsonResponse = mapper.writeValueAsString(deps);
+            logger.info("jsonResponse: " + jsonResponse);
+        } catch (JsonProcessingException e) {
+            logger.severe("Error: " + e.getMessage());
+            throw new RuntimeException(e);
         }
+        logger.info("jsonResponse: " + jsonResponse);
+
+
+        final String pageContents;
+        try {
+            pageContents = this.getPageContents("https://checkip.amazonaws.com");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        String output = String.format("{ \"message\": \"hello world\", \"location\": \"%s\" }", pageContents);
+            response.withStatusCode(500).withBody(output);
+            //System.out.println("Response: " + mapper.writeValueAsString(response));
+
+            if (response.getStatusCode() != 200) {
+                try {
+                    throw new IOException("Error, dependency not available");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            return response;
+
     }
 
     private String getPageContents(String address) throws IOException {

@@ -34,6 +34,19 @@ paths:
                   location:
                     type: string
                     description: The IP address
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The hello message
+                  location:
+                    type: string
+                    description: The IP address
       x-amazon-apigateway-integration:
         httpMethod: POST
         type: aws
@@ -58,4 +71,106 @@ paths:
                 #set($data = $util.parseJson($input.json('$.body')))
                 $data
                
-        
+          500:
+            statusCode: 500
+            responseTemplates:
+              application/json: |-
+                #set($data = $util.parseJson($input.json('$.body')))
+                $data
+
+  /labs/greetings/name:
+    get:
+      summary: Returns a hello message using RequestStreamHandler
+      description: Returns a hello message with IP address
+      operationId: LabsGreetingsGETHello
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The hello message
+
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The hello message
+
+        409:
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The hello message
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        type: aws
+        timeoutInMillis: 20000
+        uri: 
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsGreetingGETNameLambda.Arn}/invocations
+        passThroughBehavior: when_no_templates
+        requestTemplates:
+          application/json: |-
+            {
+              "headers": {
+                #foreach($param in $input.params().header.keySet())
+                "$param": "$util.escapeJavaScript($input.params().header.get($param))" #if($foreach.hasNext),#end
+                #end
+              }
+            }
+        responses:
+          default:
+            statusCode: 200
+            responseTemplates:
+              application/json: |-
+                $input.json('$.body')
+               
+          500:
+            statusCode: 500
+            responseTemplates:
+              application/json: |-
+                $input.json('$.body')
+
+          409:
+            statusCode: 409
+            responseTemplates:
+              application/json: |-
+                $input.json('$.body')
+                
+
+  /labs/balances/id:
+    get:
+      summary: Returns a hello message using aws_proxy integration
+      description: Returns a hello message with IP address
+      operationId: LabsBalancesGETByIdLambda
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The hello message
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        type: aws_proxy
+        timeoutInMillis: 20000
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsBalancesGETByIdLambda.Arn}/invocations
