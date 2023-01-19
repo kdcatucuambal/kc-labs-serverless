@@ -1,0 +1,128 @@
+openapi: 3.0.1
+info:
+  title: 
+    Fn::Sub: Labs Validate Request - ${AWS::StackName} 
+  version: 1.0.0
+  description: |
+    This API validates the request body and returns the request body as a response.
+    This API is used for testing the API Gateway Labs.
+
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params-only:
+    validateRequestBody: false
+    validateRequestParameters: true
+  
+paths: 
+  /labs/customers:
+    get:
+      summary: Get all customers
+      description: Get all customers
+      operationId: LabsCustomersGETAllLambda
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        timeoutInMillis: 20000
+        httpMethod: POST
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsCustomersGETAllLambda.Arn}/invocations
+        responses:
+          default:
+            statusCode: 200
+    post:
+      summary: Get a customer by ID
+      description: Get a customer by ID
+      operationId: LabsCustomersPSTCreateLambda
+      x-amazon-apigateway-request-validator: all
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        201:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        timeoutInMillis: 20000
+        httpMethod: POST
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsCustomersPSTCreateLambda.Arn}/invocations
+        responses:
+          default:
+            statusCode: 201
+
+
+  /labs/customers/{id}:
+    get:
+      summary: Get a customer by ID
+      description: Get a customer by ID
+      operationId: LabsCustomersGETByIdLambda
+      x-amazon-apigateway-request-validator: params-only
+      parameters:
+        - name: id
+          in: path
+          description: Customer ID
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+        - name: custom
+          in: header
+          description: custom
+          required: true
+          schema:
+            type: boolean
+        - name: page
+          in: query
+          description: Page number
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        timeoutInMillis: 20000
+        httpMethod: POST
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsCustomersGETByIdLambda.Arn}/invocations
+        responses:
+          default:
+            statusCode: 200
+
+components:
+  schemas:
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+        fullName:
+          type: string
+        isPremium:
+          type: boolean
+      required:
+        - id
+        - fullName
+        - isPremium

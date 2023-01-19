@@ -2,9 +2,9 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "kc-labs"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1bj1yglddqpax"
-s3_prefix = "kc-labs"
+stack_name = "kc-labs-validate-request"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1xmz9a9vxe11b"
+s3_prefix = "kc-labs-validate-request"
 region = "us-east-2"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
