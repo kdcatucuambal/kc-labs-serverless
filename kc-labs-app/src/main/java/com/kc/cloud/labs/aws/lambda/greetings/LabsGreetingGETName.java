@@ -1,9 +1,9 @@
 package com.kc.cloud.labs.aws.lambda.greetings;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -28,9 +28,14 @@ public class LabsGreetingGETName implements RequestStreamHandler {
 
 
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
-        response.setStatusCode(409);
+        response.setStatusCode(200);
         response.setBody("Hello " + requestBody);
-        response.setBody("{\"message\":\"Successfully created\"}");
+
+        String code = RandomStringUtils.random(10, true, true);
+
+        response.setBody("{ \"message\": \"hello world\", \"code\": \"" + code + "\" }");
+
+
 
         logger.info("Response: " + response);
 

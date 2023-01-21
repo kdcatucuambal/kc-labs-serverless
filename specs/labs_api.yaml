@@ -68,8 +68,7 @@ paths:
             statusCode: 200
             responseTemplates:
               application/json: |-
-                #set($data = $util.parseJson($input.json('$.body')))
-                $data
+                $input.json('$.body')
                
           500:
             statusCode: 500
@@ -94,6 +93,9 @@ paths:
                   message:
                     type: string
                     description: The hello message
+                  code:
+                    type: string
+                    description: The code
 
         500:
           description: Error
@@ -105,6 +107,9 @@ paths:
                   message:
                     type: string
                     description: The hello message
+                  code:
+                    type: string
+                    description: The code
 
         409:
           description: Error
@@ -116,6 +121,9 @@ paths:
                   message:
                     type: string
                     description: The hello message
+                  code:
+                    type: string
+                    description: The code
       x-amazon-apigateway-integration:
         httpMethod: POST
         type: aws

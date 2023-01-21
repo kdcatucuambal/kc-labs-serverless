@@ -18,6 +18,21 @@ Globals:
     TracingEnabled: True
 
 Resources:
+  LabsLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Sub ${AWS::StackName}-LabsLayer
+      Description: Layer libs for kc-labs-serverless test
+      #ContentUri: kc-labs-app/dependencies.zip
+      ContentUri: kc-labs-app/dependencies
+      CompatibleRuntimes:
+        - java11
+        - java8
+      CompatibleArchitectures:
+        - x86_64
+      LicenseInfo: "MIT"
+      RetentionPolicy: Retain
+
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
@@ -31,9 +46,10 @@ Resources:
   LabsGreetingsGETHelloLambda:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: kc-labs-app
       Handler: com.kc.cloud.labs.aws.lambda.greetings.LabsGreetingsGETHello::handleRequest
       FunctionName: !Sub ${AWS::StackName}-LabsGreetingsGETHelloLambda
+      Layers:
+        - !Ref LabsLayer
       Environment:
         Variables:
           PARAM1: VALUE
@@ -45,12 +61,16 @@ Resources:
             Path: /labs/greetings/hello
             Method: get
             RestApiId: !Ref ApiGatewayApi
+    Metadata:
+      BuildMethod: makefile
 
   LabsGreetingGETNameLambda:
     Type: AWS::Serverless::Function
     Properties:
       Handler: com.kc.cloud.labs.aws.lambda.greetings.LabsGreetingGETName::handleRequest
       FunctionName: !Sub ${AWS::StackName}-LabsGreetingGETNameLambda
+      Layers:
+        - !Ref LabsLayer
       Environment:
         Variables:
           PARAM1: VALUE
@@ -62,12 +82,16 @@ Resources:
             Path: /labs/greetings/name
             Method: get
             RestApiId: !Ref ApiGatewayApi
+    Metadata:
+      BuildMethod: makefile
 
   LabsBalancesGETByIdLambda:
     Type: AWS::Serverless::Function
     Properties:
       Handler: com.kc.cloud.labs.aws.lambda.balances.LabsBalancesGETById::handleRequest
       FunctionName: !Sub ${AWS::StackName}-LabsBalancesGETByIdLambda
+      Layers:
+        - !Ref LabsLayer
       Environment:
         Variables:
           PARAM1: VALUE
@@ -79,3 +103,5 @@ Resources:
             Path: /labs/balances/id
             Method: get
             RestApiId: !Ref ApiGatewayApi
+    Metadata:
+      BuildMethod: makefile
