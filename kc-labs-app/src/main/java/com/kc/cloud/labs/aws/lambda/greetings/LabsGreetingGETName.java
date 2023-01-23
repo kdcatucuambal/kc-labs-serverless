@@ -19,37 +19,16 @@ public class LabsGreetingGETName implements RequestStreamHandler {
      */
     @Override
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
-
-
         String requestBody = new BufferedReader(new InputStreamReader(inputStream))
                 .lines().collect(Collectors.joining(System.lineSeparator()));
-
         logger.info("requestBody: " + requestBody);
 
 
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
         response.setStatusCode(200);
-        response.setBody("Hello " + requestBody);
-
         String code = RandomStringUtils.random(10, true, true);
-
-        response.setBody("{ \"message\": \"hello world\", \"code\": \"" + code + "\" }");
-
-
-
+        response.setBody("{ \"name\": \"Hello Kevin, your code was created\", \"code\": \"" + code + "\" }");
         logger.info("Response: " + response);
-
         outputStream.write(response.toString().getBytes(StandardCharsets.UTF_8));
-
-
-
-        //outputStream.write("{\"body\": {\"message\": \"Hello LabsGreetingGETName\"}}".getBytes(StandardCharsets.UTF_8));
-
-
-
-//        logger.info("LabsGreetingGETName.handleRequest() finished");
-//
-//        throw new IOException("Error 500, something went wrong");
-
     }
 }

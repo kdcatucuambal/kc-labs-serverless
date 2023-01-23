@@ -1,0 +1,2 @@
+build dependencies: 
+- mvn dependency:copy-dependencies -DoutputDirectory=dependencies/java/lib -Dmdep.prependGroupId=true -DexcludeScope=provided

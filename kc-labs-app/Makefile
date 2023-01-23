@@ -1,14 +1,8 @@
-build-LabsGreetingsGETHelloLambda:
-	mvn clean package
-	mvn dependency:copy-dependencies -DexcludeScope=provided
+build-lambda:
 	cp -rf ./target/classes/* $(ARTIFACTS_DIR)/
 
-build-LabsGreetingGETNameLambda:
-	mvn clean package
-	mvn dependency:copy-dependencies -DexcludeScope=provided
-	cp -rf ./target/classes/* $(ARTIFACTS_DIR)/
+build-LabsGreetingsGETHelloLambda: build-lambda
 
-build-LabsBalancesGETByIdLambda:
-	mvn clean package
-	mvn dependency:copy-dependencies -DexcludeScope=provided
-	cp -rf ./target/classes/* $(ARTIFACTS_DIR)/
+build-LabsGreetingGETNameLambda: build-lambda
+
+build-LabsBalancesGETByIdLambda: build-lambda

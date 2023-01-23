@@ -21,9 +21,8 @@ Resources:
   LabsLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      LayerName: !Sub ${AWS::StackName}-LabsLayer
-      Description: Layer libs for kc-labs-serverless test
-      #ContentUri: kc-labs-app/dependencies.zip
+      LayerName: !Sub LabsLayer-${AWS::StackName}
+      Description: Layer libs for kc-labs-serverless
       ContentUri: kc-labs-app/dependencies
       CompatibleRuntimes:
         - java11
@@ -79,7 +78,7 @@ Resources:
         EventApi:
           Type: Api
           Properties:
-            Path: /labs/greetings/name
+            Path: /labs/greetings/name/{value}
             Method: get
             RestApiId: !Ref ApiGatewayApi
     Metadata:

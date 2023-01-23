@@ -31,9 +31,6 @@ paths:
                   message:
                     type: string
                     description: The hello message
-                  location:
-                    type: string
-                    description: The IP address
         500:
           description: Error
           content:
@@ -44,9 +41,6 @@ paths:
                   message:
                     type: string
                     description: The hello message
-                  location:
-                    type: string
-                    description: The IP address
       x-amazon-apigateway-integration:
         httpMethod: POST
         type: aws
@@ -68,7 +62,8 @@ paths:
             statusCode: 200
             responseTemplates:
               application/json: |-
-                $input.json('$.body')
+                #set($data = $util.parseJson($input.json('$.body')))
+                $data
                
           500:
             statusCode: 500
@@ -77,10 +72,10 @@ paths:
                 #set($data = $util.parseJson($input.json('$.body')))
                 $data
 
-  /labs/greetings/name:
+  /labs/greetings/name/{value}:
     get:
       summary: Returns a hello message using RequestStreamHandler
-      description: Returns a hello message with IP address
+      description: Returns a hello message with name
       operationId: LabsGreetingsGETHello
       responses:
         200:
@@ -138,6 +133,11 @@ paths:
                 #foreach($param in $input.params().header.keySet())
                 "$param": "$util.escapeJavaScript($input.params().header.get($param))" #if($foreach.hasNext),#end
                 #end
+              },
+              "pathParameters": {
+                #foreach($param in $input.params().path.keySet())
+                "$param": "$util.escapeJavaScript($input.params().path.get($param))" #if($foreach.hasNext),#end
+                #end
               }
             }
         responses:
@@ -145,13 +145,13 @@ paths:
             statusCode: 200
             responseTemplates:
               application/json: |-
-                $input.json('$.body')
+                $input.json('$')
                
           500:
             statusCode: 500
             responseTemplates:
               application/json: |-
-                $input.json('$.body')
+                $input.json('$')
 
           409:
             statusCode: 409

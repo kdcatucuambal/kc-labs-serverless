@@ -24,21 +24,23 @@ public class LabsGreetingsGETHello implements RequestHandler<
     @Override
     public APIGatewayProxyResponseEvent handleRequest(
             APIGatewayProxyRequestEvent apiGatewayProxyRequestEvent, Context context) {
+
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
         headers.put("X-Custom-Header", "application/json");
+
         logger.info("LabsGreetingsGETHello.handleRequest() invoked");
+
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent()
                 .withHeaders(headers);
 
         System.out.println("ApiId:" + apiGatewayProxyRequestEvent);
-
         HashMap<String, CustomDependency> deps = new HashMap<>();
-        deps.put("rds", new CustomDependency("RDS", "jdbc:mysql://localhost:3306/"));
-        deps.put("s3", new CustomDependency("S3", "https://s3.amazonaws.com/"));
-        deps.put("dynamodb", new CustomDependency("DynamoDB", "https://dynamodb.us-east-1.amazonaws.com/"));
+        deps.put("rds", new CustomDependency("Hello Mysql", "jdbc:mysql://localhost:3306/"));
+        deps.put("s3", new CustomDependency("Hello S3", "https://s3.amazonaws.com/"));
+        deps.put("dynamodb", new CustomDependency("Hello Dynamo", "https://dynamodb.us-east-1.amazonaws.com/"));
         ObjectMapper mapper = new ObjectMapper();
-        String jsonResponse = null;
+        String jsonResponse;
         try {
             jsonResponse = mapper.writeValueAsString(deps);
             logger.info("jsonResponse: " + jsonResponse);
@@ -48,32 +50,9 @@ public class LabsGreetingsGETHello implements RequestHandler<
         }
         logger.info("jsonResponse: " + jsonResponse);
 
-
-        final String pageContents;
-        try {
-            pageContents = this.getPageContents("https://checkip.amazonaws.com");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        String output = String.format("{ \"message\": \"hello world\", \"location\": \"%s\" }", pageContents);
-            response.withStatusCode(500).withBody(output);
-            //System.out.println("Response: " + mapper.writeValueAsString(response));
-
-            if (response.getStatusCode() != 200) {
-                try {
-                    throw new IOException("Error, dependency not available");
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            return response;
-
+        return response
+                .withStatusCode(200)
+                .withBody(jsonResponse);
     }
 
-    private String getPageContents(String address) throws IOException {
-        URL url = new URL(address);
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
-            return br.lines().collect(Collectors.joining(System.lineSeparator()));
-        }
-    }
 }
