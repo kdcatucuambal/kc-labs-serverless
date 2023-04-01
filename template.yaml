@@ -7,7 +7,7 @@ Description: >
 
 Globals:
   Function:
-    CodeUri: kc-labs-app
+    CodeUri: kc-labs-app/target/kc-labs-app-1.0.jar
     Timeout: 20
     Tracing: Active
     Runtime: java11
@@ -60,8 +60,6 @@ Resources:
             Path: /labs/greetings/hello
             Method: get
             RestApiId: !Ref ApiGatewayApi
-    Metadata:
-      BuildMethod: makefile
 
   LabsGreetingGETNameLambda:
     Type: AWS::Serverless::Function
@@ -81,8 +79,6 @@ Resources:
             Path: /labs/greetings/name/{value}
             Method: get
             RestApiId: !Ref ApiGatewayApi
-    Metadata:
-      BuildMethod: makefile
 
   LabsBalancesGETByIdLambda:
     Type: AWS::Serverless::Function
@@ -102,5 +98,3 @@ Resources:
             Path: /labs/balances/id
             Method: get
             RestApiId: !Ref ApiGatewayApi
-    Metadata:
-      BuildMethod: makefile
