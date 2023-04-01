@@ -1,8 +1,9 @@
 package com.kc.cloud.labs.aws.lambda.greetings;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -18,15 +19,16 @@ public class LabsGreetingGETName implements RequestStreamHandler {
      */
     @Override
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
-        LambdaLogger logger = context.getLogger();
         String requestBody = new BufferedReader(new InputStreamReader(inputStream))
                 .lines().collect(Collectors.joining(System.lineSeparator()));
-        System.out.println("REQUEST: " + requestBody);
-        try (inputStream; outputStream) {
-            outputStream.write("{\"body\":\"Hello John\"}".getBytes(StandardCharsets.UTF_8));
-        } catch (Exception e) {
-            logger.log("Error in getting the name");
-        }
+        logger.info("requestBody: " + requestBody);
 
+
+        APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
+        response.setStatusCode(200);
+        String code = RandomStringUtils.random(10, true, true);
+        response.setBody("{ \"name\": \"Hello Kevin, your code was created\", \"code\": \"" + code + "\" }");
+        logger.info("Response: " + response);
+        outputStream.write(response.toString().getBytes(StandardCharsets.UTF_8));
     }
 }

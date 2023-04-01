@@ -4,6 +4,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,30 +24,35 @@ public class LabsGreetingsGETHello implements RequestHandler<
     @Override
     public APIGatewayProxyResponseEvent handleRequest(
             APIGatewayProxyRequestEvent apiGatewayProxyRequestEvent, Context context) {
+
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
         headers.put("X-Custom-Header", "application/json");
+
         logger.info("LabsGreetingsGETHello.handleRequest() invoked");
+
         APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent()
                 .withHeaders(headers);
+
+        System.out.println("ApiId:" + apiGatewayProxyRequestEvent);
+        HashMap<String, CustomDependency> deps = new HashMap<>();
+        deps.put("rds", new CustomDependency("Hello Mysql", "jdbc:mysql://localhost:3306/"));
+        deps.put("s3", new CustomDependency("Hello S3", "https://s3.amazonaws.com/"));
+        deps.put("dynamodb", new CustomDependency("Hello Dynamo", "https://dynamodb.us-east-1.amazonaws.com/"));
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonResponse;
         try {
-            final String pageContents = this.getPageContents("https://checkip.amazonaws.com");
-            String output = String.format("{ \"message\": \"hello world\", \"location\": \"%s\" }", pageContents);
-
-            return response
-                    .withStatusCode(200)
-                    .withBody(output);
-        } catch (IOException e) {
-            return response
-                    .withBody("{}")
-                    .withStatusCode(500);
+            jsonResponse = mapper.writeValueAsString(deps);
+            logger.info("jsonResponse: " + jsonResponse);
+        } catch (JsonProcessingException e) {
+            logger.severe("Error: " + e.getMessage());
+            throw new RuntimeException(e);
         }
+        logger.info("jsonResponse: " + jsonResponse);
+
+        return response
+                .withStatusCode(200)
+                .withBody(jsonResponse);
     }
 
-    private String getPageContents(String address) throws IOException {
-        URL url = new URL(address);
-        try(BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()))) {
-            return br.lines().collect(Collectors.joining(System.lineSeparator()));
-        }
-    }
 }

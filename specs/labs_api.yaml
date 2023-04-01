@@ -1,0 +1,184 @@
+openapi: 3.0.0
+info:
+  title: 
+    Fn::Sub: Labs API Sample - ${AWS::StackName}
+  version: 0.0.1
+  description: |
+    This is a sample api labs using Java
+
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params-only:
+    validateRequestBody: false
+    validateRequestParameters: true
+
+paths:
+  /labs/greetings/hello:
+    get:
+      summary: Returns a hello message with IP address
+      description: Returns a hello message with IP address
+      operationId: LabsGreetingsGETHello
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The hello message
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The hello message
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        type: aws
+        timeoutInMillis: 20000
+        uri: 
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsGreetingsGETHelloLambda.Arn}/invocations
+        passThroughBehavior: when_no_templates
+        requestTemplates:
+          application/json: |-
+            {
+              "headers": {
+                #foreach($param in $input.params().header.keySet())
+                "$param": "$util.escapeJavaScript($input.params().header.get($param))" #if($foreach.hasNext),#end
+                #end
+              }
+            }
+        responses:
+          default:
+            statusCode: 200
+            responseTemplates:
+              application/json: |-
+                #set($data = $util.parseJson($input.json('$.body')))
+                $data
+               
+          500:
+            statusCode: 500
+            responseTemplates:
+              application/json: |-
+                #set($data = $util.parseJson($input.json('$.body')))
+                $data
+
+  /labs/greetings/name/{value}:
+    get:
+      summary: Returns a hello message using RequestStreamHandler
+      description: Returns a hello message with name
+      operationId: LabsGreetingsGETHello
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The hello message
+                  code:
+                    type: string
+                    description: The code
+
+        500:
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The hello message
+                  code:
+                    type: string
+                    description: The code
+
+        409:
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The hello message
+                  code:
+                    type: string
+                    description: The code
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        type: aws
+        timeoutInMillis: 20000
+        uri: 
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsGreetingGETNameLambda.Arn}/invocations
+        passThroughBehavior: when_no_templates
+        requestTemplates:
+          application/json: |-
+            {
+              "headers": {
+                #foreach($param in $input.params().header.keySet())
+                "$param": "$util.escapeJavaScript($input.params().header.get($param))" #if($foreach.hasNext),#end
+                #end
+              },
+              "pathParameters": {
+                #foreach($param in $input.params().path.keySet())
+                "$param": "$util.escapeJavaScript($input.params().path.get($param))" #if($foreach.hasNext),#end
+                #end
+              }
+            }
+        responses:
+          default:
+            statusCode: 200
+            responseTemplates:
+              application/json: |-
+                $input.json('$')
+               
+          500:
+            statusCode: 500
+            responseTemplates:
+              application/json: |-
+                $input.json('$')
+
+          409:
+            statusCode: 409
+            responseTemplates:
+              application/json: |-
+                $input.json('$.body')
+                
+
+  /labs/balances/id:
+    get:
+      summary: Returns a hello message using aws_proxy integration
+      description: Returns a hello message with IP address
+      operationId: LabsBalancesGETByIdLambda
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: The hello message
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        type: aws_proxy
+        timeoutInMillis: 20000
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsBalancesGETByIdLambda.Arn}/invocations
