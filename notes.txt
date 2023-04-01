@@ -1,9 +1,10 @@
+
+1. Compile and package the application
 mvn clean package
-build dependencies:
--
+2. Build dependencies:
 mvn dependency:copy-dependencies -DoutputDirectory=dependencies/java/lib -Dmdep.prependGroupId=true -DexcludeScope=provided
-
-
-sam build
-sam deploy
+3. Package the application using SAM:
+sam package --template-file template.yaml --s3-bucket dev1-kc-labs-serverless --output-template-file packaged.yaml
+4. Deploy the application:
+sam deploy --template-file packaged.yaml --stack-name dev-deploy-kc-labs-serverless --capabilities CAPABILITY_IAM
 
