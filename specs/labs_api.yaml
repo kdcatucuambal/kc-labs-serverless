@@ -160,7 +160,7 @@ paths:
                 $input.json('$.body')
                 
 
-  /labs/balances/id:
+  /labs/balances/{id}:
     get:
       summary: Returns a hello message using aws_proxy integration
       description: Returns a hello message with IP address

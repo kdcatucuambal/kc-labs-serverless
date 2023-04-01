@@ -95,6 +95,6 @@ Resources:
         EventApi:
           Type: Api
           Properties:
-            Path: /labs/balances/id
+            Path: /labs/balances/{id}
             Method: get
             RestApiId: !Ref ApiGatewayApi
