@@ -5,6 +5,36 @@ Description: >
 
   Sample SAM Template for kc-labs-serverless
 
+Parameters:
+  EnvironmentId:
+    Type: String
+    Description: Environment ID
+    Default: kec
+
+  LambdaAliasProduction:
+    Type: String
+    Description: Lambda Alias for Production
+    Default: production
+
+  LambdaAliasBeta:
+    Type: String
+    Description: Environment alias
+    Default: beta
+
+  LogRetentionInDays:
+    Type: Number
+    Description: Log retention in days
+    Default: 5
+  
+  ProvisionedConcurrencyConfigEnabled:
+    Type: String
+    Description: Enable Provisioned Concurrency Config
+    Default: "false"
+
+Conditions:
+  LambdaProvisioned: !Equals [!Ref ProvisionedConcurrencyConfigEnabled, "true"]
+
+
 Globals:
   Function:
     CodeUri: kc-labs-app/target/kc-labs-app-1.0.jar
@@ -21,7 +51,10 @@ Resources:
   LabsLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      LayerName: !Sub LabsLayer-${AWS::StackName}
+      LayerName: !Join
+        - ""
+        - - !Ref EnvironmentId
+          - labs-layer
       Description: Layer libs for kc-labs-serverless
       ContentUri: kc-labs-app/dependencies
       CompatibleRuntimes:
@@ -35,18 +68,33 @@ Resources:
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
+      # AccessLogSetting:
+      #   DestinationArn: !GetAtt LabsApiGatewayLogGroup.Arn
       StageName: v1
+      Variables:
+        version_alias: !Ref LambdaAliasProduction
       DefinitionBody:
         Fn::Transform:
           Name: AWS::Include
           Parameters:
             Location: ./specs/labs_api.yaml
 
+  LabsDeployment:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: !Ref ApiGatewayApi
+
+  # LabsApiGatewayLogGroup:
+  #   Type: AWS::Logs::LogGroup
+  #   Properties:
+  #     LogGroupName: !Sub "API-Gateway-Execution-Logs_${ApiGatewayApi}/v1"
+  #     RetentionInDays: !Ref LogRetentionInDays
+
   LabsGreetingsGETHelloLambda:
     Type: AWS::Serverless::Function
     Properties:
       Handler: com.kc.cloud.labs.aws.lambda.greetings.LabsGreetingsGETHello::handleRequest
-      FunctionName: !Sub ${AWS::StackName}-LabsGreetingsGETHelloLambda
+      FunctionName: !Sub "${EnvironmentId}-LabsGreetingsGETHelloLambda"
       Layers:
         - !Ref LabsLayer
       Environment:
@@ -65,7 +113,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: com.kc.cloud.labs.aws.lambda.greetings.LabsGreetingGETName::handleRequest
-      FunctionName: !Sub ${AWS::StackName}-LabsGreetingGETNameLambda
+      FunctionName: !Sub "${EnvironmentId}-LabsGreetingGETNameLambda"
       Layers:
         - !Ref LabsLayer
       Environment:
@@ -84,9 +132,11 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: com.kc.cloud.labs.aws.lambda.balances.LabsBalancesGETById::handleRequest
-      FunctionName: !Sub ${AWS::StackName}-LabsBalancesGETByIdLambda
+      FunctionName: !Sub "${EnvironmentId}-LabsBalancesGETByIdLambda"
       Layers:
         - !Ref LabsLayer
+      Role: !GetAtt LabsRole.Arn
+      AutoPublishAlias: !Ref LambdaAliasBeta
       Environment:
         Variables:
           PARAM1: VALUE
@@ -98,3 +148,69 @@ Resources:
             Path: /labs/balances/{id}
             Method: get
             RestApiId: !Ref ApiGatewayApi
+  
+  LabsBalancesGETByIdAliasProduction:
+    Type: AWS::Lambda::Alias
+    Properties:
+      Description: "Lambda alias for production"
+      FunctionName: !Ref LabsBalancesGETByIdLambda
+      FunctionVersion: !Select [ 7, !Split [ ":", !Ref LabsBalancesGETByIdLambda.Version ] ]
+      Name: !Ref LambdaAliasProduction
+      ProvisionedConcurrencyConfig:
+        !If
+          - LambdaProvisioned
+          - ProvisionedConcurrentExecutions: 2
+          - Ref: AWS::NoValue
+  
+  LabsBalancesGETByIdLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${LabsBalancesGETByIdLambda}"
+      RetentionInDays: !Ref LogRetentionInDays
+
+  LabsRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: !Sub "${EnvironmentId}-LabsRole"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+      Path: /
+      Policies:
+        - PolicyName: !Sub "${EnvironmentId}-LabsPolicy" 
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                  - "ec2:CreateNetworkInterface"
+                  - "ec2:DescribeNetworkInterfaces"
+                  - "ec2:DeleteNetworkInterface"
+                  - "ec2:AssignPrivateIpAddresses"
+                  - "ec2:UnassignPrivateIpAddresses"
+
+                Resource: "*"
+
+
+
+Outputs:
+  LabsBalancesGETByIdLambdaVersion:
+    Description: "LabsBalancesGETByIdLambda version"
+    Value: !Sub "${LabsBalancesGETByIdLambda.Version}"
+
+  RoleArn:
+    Description: "LabsRole Arn 1"
+    Value: !GetAtt LabsRole.Arn
+  
+  RoleArn2:
+    Description: "LabsRole Arn 2"
+    Value: !Sub "${LabsRole.Arn}"

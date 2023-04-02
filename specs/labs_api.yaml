@@ -181,4 +181,8 @@ paths:
         type: aws_proxy
         timeoutInMillis: 20000
         uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsBalancesGETByIdLambda.Arn}/invocations
+         Fn::Join:
+            - ""
+            - - Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsBalancesGETByIdLambda.Arn}:"
+              - "${stageVariables.version_alias}/invocations"
+          

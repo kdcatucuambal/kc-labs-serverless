@@ -54,10 +54,7 @@ public class LabsBalancesGETById implements RequestStreamHandler {
 
         CustomResponse response = new CustomResponse();
 
-
         AWSXRay.endSubsegment();
-
-
 
         Map<String, String>  headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
