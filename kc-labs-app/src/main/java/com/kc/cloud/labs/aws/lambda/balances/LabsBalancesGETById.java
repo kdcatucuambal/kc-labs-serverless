@@ -1,27 +1,22 @@
 package com.kc.cloud.labs.aws.lambda.balances;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import com.amazonaws.xray.AWSXRay;
+import com.amazonaws.xray.entities.Segment;
+import com.amazonaws.xray.entities.Subsegment;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kc.cloud.labs.aws.lambda.greetings.LabsGreetingGETName;
 import com.kc.cloud.labs.aws.models.Balance;
-import com.kc.cloud.labs.aws.models.Record;
 import com.kc.cloud.labs.aws.services.BalanceService;
-
 import java.io.*;
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-//TODO: Add the following imports:
+
 public class LabsBalancesGETById implements RequestStreamHandler {
 
     private static final Logger logger = Logger.getLogger(LabsBalancesGETById.class.getName());
@@ -43,6 +38,7 @@ public class LabsBalancesGETById implements RequestStreamHandler {
 
         Object pathPatametersObject = requestMap.get("pathParameters");
 
+        Subsegment subsegment = AWSXRay.beginSubsegment("Get Balance By Id");
 
         Map<String, String> pathPatameters = (Map<String, String>) pathPatametersObject;
 
@@ -57,6 +53,11 @@ public class LabsBalancesGETById implements RequestStreamHandler {
         String balanceFoundJson = mapper.writeValueAsString(balanceFound);
 
         CustomResponse response = new CustomResponse();
+
+
+        AWSXRay.endSubsegment();
+
+
 
         Map<String, String>  headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
