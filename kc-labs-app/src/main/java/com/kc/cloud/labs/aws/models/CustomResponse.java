@@ -1,4 +1,4 @@
-package com.kc.cloud.labs.aws.lambda.balances;
+package com.kc.cloud.labs.aws.models;
 
 import java.util.Map;
 

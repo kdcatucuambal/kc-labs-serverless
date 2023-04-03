@@ -14,6 +14,7 @@ public class BalanceService {
 
     public BalanceService(){
         logger.info("BalanceService initialized!");
+        logger.info(this.toString());
     }
     public Balance getBalanceByCode(String code){
         Balance balance = new Balance();

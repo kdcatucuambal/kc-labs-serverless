@@ -37,13 +37,16 @@ Conditions:
 
 Globals:
   Function:
-    CodeUri: kc-labs-app/target/kc-labs-app-1.0.jar
+    CodeUri: kc-labs-app/target/original-kc-labs-app-1.0.jar
     Timeout: 20
     Tracing: Active
     Runtime: java11
     MemorySize: 512
     Architectures:
       - x86_64
+    Environment:
+      Variables:
+        message: "Hello from Lambda"
   Api:
     TracingEnabled: True
 
@@ -168,6 +171,62 @@ Resources:
       LogGroupName: !Sub "/aws/lambda/${LabsBalancesGETByIdLambda}"
       RetentionInDays: !Ref LogRetentionInDays
 
+  LabsBalancesGETByIdProductionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Sub "${LabsBalancesGETByIdLambda}:${LambdaAliasProduction}"
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayApi}*/*/*"
+
+  LabsBalancesGETAllLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: com.kc.cloud.labs.aws.lambda.balances.LabsBalancesGETAll::handleRequest
+      FunctionName: !Sub "${EnvironmentId}-LabsBalancesGETAllLambda"
+      Layers:
+        - !Ref LabsLayer
+      Role: !GetAtt LabsRole.Arn
+      AutoPublishAlias: !Ref LambdaAliasBeta
+      Environment:
+        Variables:
+          PARAM1: VALUE
+          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+      Events:
+        EventApi:
+          Type: Api
+          Properties:
+            Path: /labs/balances
+            Method: get
+            RestApiId: !Ref ApiGatewayApi
+
+  LabsBalancesGETAllAliasProduction:
+    Type: AWS::Lambda::Alias
+    Properties:
+      Description: "Lambda alias for production"
+      FunctionName: !Ref LabsBalancesGETAllLambda
+      FunctionVersion: !Select [ 7, !Split [ ":", !Ref LabsBalancesGETAllLambda.Version ] ]
+      Name: !Ref LambdaAliasProduction
+      ProvisionedConcurrencyConfig:
+        !If
+          - LambdaProvisioned
+          - ProvisionedConcurrentExecutions: 2
+          - Ref: AWS::NoValue
+
+  LabsBalancesGETAllLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${LabsBalancesGETAllLambda}"
+      RetentionInDays: !Ref LogRetentionInDays
+
+  LabsBalancesGETAllProductionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Sub "${LabsBalancesGETAllLambda}:${LambdaAliasProduction}"
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayApi}*/*/*"
+
   LabsRole:
     Type: "AWS::IAM::Role"
     Properties:
@@ -197,7 +256,11 @@ Resources:
                   - "ec2:DeleteNetworkInterface"
                   - "ec2:AssignPrivateIpAddresses"
                   - "ec2:UnassignPrivateIpAddresses"
-
+                  - "xray:PutTraceSegments"
+                  - "xray:PutTelemetryRecords"
+                  - "xray:GetSamplingRules"
+                  - "xray:GetSamplingTargets"
+                  - "xray:GetSamplingStatisticSummaries"
                 Resource: "*"
 
 
