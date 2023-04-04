@@ -374,7 +374,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RuleExecutePUTRq'
+              $ref: '#/components/schemas/Test'
         required: true
 
       responses:
@@ -569,14 +569,10 @@ components:
     Test:
       type: object
       properties:
-        message:
-          type: string
-          description: "The error message"
-        version:
-          type: integer
-          description: "The version" 
         values:
+          type: object
           additionalProperties: true
+
 
     RuleExecutePUTRq:
         description: "Cuerpo de petición para ejecutar la api de reglas acepta nulls"
