@@ -568,7 +568,13 @@ components:
 
     Test:
       type: object
+      required:
+        - values
       properties:
+        idCustomer:
+          type:
+            - string
+            - "null"
         values:
           type: object
           additionalProperties: true
