@@ -215,13 +215,13 @@ paths:
         200:
           description: OK
           headers:
-            Access-Controll-Allow-Methods:
+            Access-Control-Allow-Methods:
               schema:
                 type: string
-            Access-Controll-Allow-Origin:
+            Access-Control-Allow-Origin:
               schema:
                 type: string
-            Access-Controll-Allow-Headers:
+            Access-Control-Allow-Headers:
               schema:
                 type: string
             x-jws-signature:
