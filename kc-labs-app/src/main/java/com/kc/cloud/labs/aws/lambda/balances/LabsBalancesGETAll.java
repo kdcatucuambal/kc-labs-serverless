@@ -32,7 +32,7 @@ public class LabsBalancesGETAll implements RequestStreamHandler {
 
         String request = this.getRequestInput(inputStream);
         logger.info("Info Request: " + request);
-        throw new RuntimeException("409");
+        //throw new RuntimeException("409");
 
 //        try {
 //            throw new LabServerlessException("Something went wrong");
@@ -40,14 +40,14 @@ public class LabsBalancesGETAll implements RequestStreamHandler {
 //            logger.severe(e.getMessage());
 //        }
 
-//        try (Subsegment subsegment = AWSXRay.beginSubsegment("Get All Balances")) {
-//            List<Balance> balances = this.balanceService.getAllBalances();
-//            AWSXRay.endSubsegment();
-//            String jsonResponse = this.mapper.writeValueAsString(this.getResponse(balances));
-//            outputStream.write(jsonResponse.getBytes());
-//        } catch (Exception e) {
-//            logger.severe(e.getMessage());
-//        }
+        try (Subsegment subsegment = AWSXRay.beginSubsegment("Get All Balances")) {
+            List<Balance> balances = this.balanceService.getAllBalances();
+            AWSXRay.endSubsegment();
+            String jsonResponse = this.mapper.writeValueAsString(this.getResponse(balances));
+            outputStream.write(jsonResponse.getBytes());
+        } catch (Exception e) {
+            logger.severe(e.getMessage());
+        }
     }
 
     public Response<List<Balance>> getResponse(List<Balance> balances) throws JsonProcessingException {

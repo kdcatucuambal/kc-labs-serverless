@@ -159,7 +159,6 @@ paths:
               application/json: |-
                 $input.json('$.body')
                 
-
   /labs/balances/{id}:
     get:
       summary: Returns a hello message using aws_proxy integration
@@ -216,6 +215,15 @@ paths:
         200:
           description: OK
           headers:
+            Access-Controll-Allow-Methods:
+              schema:
+                type: string
+            Access-Controll-Allow-Origin:
+              schema:
+                type: string
+            Access-Controll-Allow-Headers:
+              schema:
+                type: string
             x-jws-signature:
               $ref: '#/components/headers/x-jws-signature'
             Content-Language:
@@ -282,27 +290,33 @@ paths:
         responses:
           default:
             statusCode: 200
-            # responseParameters:
-            #   method.response.header.Access-Control-Allow-Credentials: "'true'"
-            #   method.response.header.Access-Control-Allow-Headers: "'*'"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+          responseTemplates:
+            application/json: |
+              {}
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
                 $input.json('$.body')
           400:
             statusCode: 400
-            # responseParameters:
-            #   method.response.header.Access-Control-Allow-Credentials: "'true'"
-            #   method.response.header.Access-Control-Allow-Headers: "'*'"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
               application/json: |-
                  #set($res = $input.path('$'))
                  {"message": "El mensaje de solicitud no se encuentra debidamente formateado."}
           401:
             statusCode: 401
-            # responseParameters:
-            #   method.response.header.Access-Control-Allow-Credentials: "'true'"
-            #   method.response.header.Access-Control-Allow-Headers: "'*'"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
               application/json: |-
                  #set($res = $input.path('$'))
@@ -310,9 +324,10 @@ paths:
 
           403:
             statusCode: 403
-            # responseParameters:
-            #   method.response.header.Access-Control-Allow-Credentials: "'true'"
-            #   method.response.header.Access-Control-Allow-Headers: "'*'"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
               application/json: |-
                  #set($res = $input.path('$'))
@@ -320,9 +335,10 @@ paths:
 
           404:
             statusCode: 404
-            # responseParameters:
-            #   method.response.header.Access-Control-Allow-Credentials: "'true'"
-            #   method.response.header.Access-Control-Allow-Headers: "'*'"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
               application/json: |-
                  #set($res = $input.path('$'))
@@ -330,9 +346,10 @@ paths:
 
           409:
             statusCode: 409
-            # responseParameters:
-            #   method.response.header.Access-Control-Allow-Credentials: "'true'"
-            #   method.response.header.Access-Control-Allow-Headers: "'*'"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
               application/json: |-
                  #set($res = $input.path('$'))
@@ -340,9 +357,10 @@ paths:
 
           429:
             statusCode: 429
-            # responseParameters:
-            #   method.response.header.Access-Control-Allow-Credentials: "'true'"
-            #   method.response.header.Access-Control-Allow-Headers: "'*'"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
               application/json: |-
                  #set($res = $input.path('$'))
@@ -350,15 +368,48 @@ paths:
 
           500|.*timed.*:
             statusCode: 500
-            # responseParameters:
-            #   method.response.header.Access-Control-Allow-Credentials: "'true'"
-            #   method.response.header.Access-Control-Allow-Headers: "'*'"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
               application/json: |-
                  #set($res = $input.path('$'))
                  #set($cause = $input.path('$.cause'))
-                  $cause.errorMessage   
-
+                  $cause.errorMessage       
+    options:
+      summary: Returns all balances OPT
+      description: Returns all balances from database OPT
+      operationId: LabsBalancesGETAllOPT
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: 200
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |
+                {}
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: when_no_match
+        type: mock
   /dummy/put:
     put:
       x-amazon-apigateway-request-validator: all
