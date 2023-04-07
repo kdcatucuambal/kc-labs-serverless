@@ -25,6 +25,11 @@ Parameters:
     Type: Number
     Description: Log retention in days
     Default: 5
+
+  LambdaAuthorizer:
+    Type: String
+    Description: Lambda Authorizer
+    Default: kec-authorizer-lambda
   
   ProvisionedConcurrencyConfigEnabled:
     Type: String
@@ -145,10 +150,12 @@ Resources:
       RetentionPolicy: Retain
 
   ApiGatewayApi:
+    DependsOn:
+      - ApiCWLRoleArnAccount
     Type: AWS::Serverless::Api
     Properties:
-      # AccessLogSetting:
-      #   DestinationArn: !GetAtt LabsApiGatewayLogGroup.Arn
+      AccessLogSetting:
+        DestinationArn: !GetAtt LabsApiGatewayLogGroup.Arn
       StageName: v1
       Variables:
         version_alias: !Ref LambdaAliasProduction
@@ -157,17 +164,70 @@ Resources:
           Name: AWS::Include
           Parameters:
             Location: ./specs/labs_api.yaml
+      MethodSettings:
+        - ResourcePath: "/*"
+          HttpMethod: "*"
+          MetricsEnabled: "true"
+          DataTraceEnabled: "false"
+          LoggingLevel: "INFO"
 
   LabsDeployment:
     Type: AWS::ApiGateway::Deployment
     Properties:
       RestApiId: !Ref ApiGatewayApi
 
-  # LabsApiGatewayLogGroup:
-  #   Type: AWS::Logs::LogGroup
-  #   Properties:
-  #     LogGroupName: !Sub "API-Gateway-Execution-Logs_${ApiGatewayApi}/v1"
-  #     RetentionInDays: !Ref LogRetentionInDays
+  LabsApiGatewayLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "API-Gateway-Execution-Logs_${ApiGatewayApi}/v1"
+      RetentionInDays: !Ref LogRetentionInDays
+
+
+  ApiCWLRoleArnAccount:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn: !GetAtt IAMRoleCoreApiGatewayCloudWatch.Arn
+
+  IAMRoleCoreApiGatewayCloudWatch:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Join ['-', [!Ref EnvironmentId , "ApiGateway-Log-role"]]
+      Description: !Join ['-', [!Ref EnvironmentId , "ApiGateway-Log-role"]]
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: 
+              - apigateway.amazonaws.com
+          Action: 'sts:AssumeRole'
+      Path : "/"
+      Policies:
+      - PolicyName: !Join ['-', [!Ref EnvironmentId , "default"]]
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - 's3:GetObject'
+            Resource: "arn:aws:s3:::*/*"
+          - Effect: Allow
+            Action:
+            - 'logs:CreateLogGroup'
+            - 'logs:CreateLogStream'
+            - 'logs:DescribeLogGroups'
+            - 'logs:DescribeLogStreams'
+            - 'logs:FilterLogEvents'
+            Resource: 
+            - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*'
+          - Effect: Allow
+            Action:
+            - 'logs:PutLogEvents'
+            - 'logs:GetLogEvents'
+            Resource: 
+            - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:*:log-stream:*'
+
+
 
   LabsGreetingsGETHelloLambda:
     Type: AWS::Serverless::Function

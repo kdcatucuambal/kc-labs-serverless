@@ -195,6 +195,7 @@ paths:
     get:
       security:
         - api_key: []
+        - authorizer: []
       x-amazon-apigateway-request-validator: all
       summary: Returns all balances
       description: Returns all balances from database
@@ -878,3 +879,16 @@ components:
       in: header
       name: x-api-key
       description: 'API key or aborts with Unauthorized'
+    authorizer:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Token JWT para el consumo del API.'
+      x-amazon-apigateway-authtype: custom
+      x-amazon-apigateway-authorizer:
+        type: token
+        identitySource: v1
+        authorizerUri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${LambdaAuthorizer}:production/invocations
+        authorizerResultTtlInSeconds: 3600
+        # identityValidationExpression: ^Bearer [-0-9a-zA-z\.]*$
