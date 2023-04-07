@@ -891,4 +891,4 @@ components:
         authorizerUri:
           Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${LambdaAuthorizer}:production/invocations
         authorizerResultTtlInSeconds: 3600
-        # identityValidationExpression: ^Bearer [-0-9a-zA-z\.]*$
+        identityValidationExpression: ^Bearer [-0-9a-zA-z\.]*$

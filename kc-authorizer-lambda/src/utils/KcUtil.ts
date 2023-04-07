@@ -1,4 +1,5 @@
-import { Policy } from "../models/Policy";
+import { APIGatewayAuthorizerResult } from "aws-lambda";
+import { PolicyPayload } from "../models/PolicyPayload";
 
 
 export class KcUtil {
@@ -8,16 +9,16 @@ export class KcUtil {
         return token === 'Bearer 123';
     }
 
-    static async generatePolicy(principalId: string, effect: string, resource: string): Promise<Policy> {
-        return {
-            principalId: principalId,
+    static async generatePolicy(payload: PolicyPayload): Promise<APIGatewayAuthorizerResult> {
+        const policy: APIGatewayAuthorizerResult = {
+            principalId: payload.principalId,
             policyDocument: {
                 Version: '2012-10-17',
                 Statement: [
                     {
                         Action: 'execute-api:Invoke',
-                        Effect: effect,
-                        Resource: [resource]
+                        Effect: payload.principalId,
+                        Resource: [payload.resource]
                     }
                 ]
             },
@@ -27,5 +28,6 @@ export class KcUtil {
                 bool: true
             }
         }
+        return policy;
     }
 }

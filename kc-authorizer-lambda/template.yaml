@@ -35,6 +35,15 @@ Resources:
           AUTH_AWS_ACCOUNT_ID: !Ref AWS::AccountId
       Tracing: Active
 
+  AuthorizerFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Sub "${AuthorizerFunction}:${AuthorizerAlias}"
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/authorizers/*'
+
+
   AuthorizerLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
@@ -58,6 +67,7 @@ Resources:
             Principal:
               Service:
                 - lambda.amazonaws.com
+                - events.amazonaws.com
             Action:
               - sts:AssumeRole
       Path: /

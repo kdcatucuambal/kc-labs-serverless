@@ -1,3 +1,6 @@
+npm run build
+generate layer execute npm install --production
+
 3. Package the application using SAM:
 sam package --template-file template.yaml --s3-bucket dev1-kc-authorizer --output-template-file packaged.yaml
 4. Deploy the application:
