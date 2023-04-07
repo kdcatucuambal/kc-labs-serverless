@@ -291,12 +291,9 @@ paths:
           default:
             statusCode: 200
             responseParameters:
-              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Headers: '''*'''
               method.response.header.Access-Control-Allow-Methods: '''*'''
               method.response.header.Access-Control-Allow-Origin: '''*'''
-          responseTemplates:
-            application/json: |
-              {}
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
@@ -304,7 +301,7 @@ paths:
           400:
             statusCode: 400
             responseParameters:
-              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Headers: '''*'''
               method.response.header.Access-Control-Allow-Methods: '''*'''
               method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
@@ -314,7 +311,7 @@ paths:
           401:
             statusCode: 401
             responseParameters:
-              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Headers: '''*'''
               method.response.header.Access-Control-Allow-Methods: '''*'''
               method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
@@ -325,7 +322,7 @@ paths:
           403:
             statusCode: 403
             responseParameters:
-              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Headers: '''*'''
               method.response.header.Access-Control-Allow-Methods: '''*'''
               method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
@@ -336,7 +333,7 @@ paths:
           404:
             statusCode: 404
             responseParameters:
-              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Headers: '''*'''
               method.response.header.Access-Control-Allow-Methods: '''*'''
               method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
@@ -347,7 +344,7 @@ paths:
           409:
             statusCode: 409
             responseParameters:
-              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Headers: '''*'''
               method.response.header.Access-Control-Allow-Methods: '''*'''
               method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
@@ -358,7 +355,7 @@ paths:
           429:
             statusCode: 429
             responseParameters:
-              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Headers: '''*'''
               method.response.header.Access-Control-Allow-Methods: '''*'''
               method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
@@ -369,7 +366,7 @@ paths:
           500|.*timed.*:
             statusCode: 500
             responseParameters:
-              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Headers: '''*'''
               method.response.header.Access-Control-Allow-Methods: '''*'''
               method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
@@ -400,7 +397,7 @@ paths:
           default:
             statusCode: 200
             responseParameters:
-              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Headers: '''*'''
               method.response.header.Access-Control-Allow-Methods: '''*'''
               method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
@@ -739,6 +736,15 @@ components:
       headers:
         Content-Language:
           $ref: "#/components/headers/Content-Language"
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
       content:
         application/json:
           schema:
@@ -749,6 +755,15 @@ components:
       headers:
         Content-Language:
           $ref: "#/components/headers/Content-Language"
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
       content:
         application/json:
           schema:
@@ -759,6 +774,15 @@ components:
       headers:
         Content-Language:
           $ref: "#/components/headers/Content-Language"
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
       content:
         application/json:
           schema:
@@ -769,6 +793,15 @@ components:
       headers:
         Content-Language:
           $ref: "#/components/headers/Content-Language"
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
       content:
         application/json:
           schema:
@@ -779,6 +812,15 @@ components:
       headers:
         Content-Language:
           $ref: "#/components/headers/Content-Language"
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
       content:
         application/json:
           schema:
@@ -789,6 +831,15 @@ components:
       headers:
         Content-Language:
           $ref: "#/components/headers/Content-Language"
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
       content:
         application/json:
           schema:
@@ -799,6 +850,15 @@ components:
       headers:
         Content-Language:
           $ref: "#/components/headers/Content-Language"
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
       content:
         application/json:
           schema:

@@ -31,6 +31,39 @@ Parameters:
     Description: Enable Provisioned Concurrency Config
     Default: "false"
 
+  ApiGatewayResponseMessage400:
+    Type: String
+    Default: The message is not properly formatted.
+    Description: message error 400
+  ApiGatewayResponseMessage401:
+    Type: String
+    Default: You are not authorized to access this resource.
+    Description: message error 401
+  ApiGatewayResponseMessage403:
+    Type: String
+    Default: The request has been denied.
+    Description: message error 403
+  ApiGatewayResponseMessage404:
+    Type: String
+    Default: The object not found.
+    Description: message error 404
+  ApiGatewayResponseMessage405:
+    Type: String
+    Default: "The method is not allowed"
+    Description: message error 405
+  ApiGatewayResponseMessage409:
+    Type: String
+    Default: The request had a conflict.
+    Description: message error 409
+  ApiGatewayResponseMessage429:
+    Type: String
+    Default: Too many requests have been made.
+    Description: message error 429
+  ApiGatewayResponseMessage500:
+    Type: String
+    Default: An error occurred during the request.
+    Description: message error 500
+
 Conditions:
   LambdaProvisioned: !Equals [!Ref ProvisionedConcurrencyConfigEnabled, "true"]
 
@@ -48,7 +81,50 @@ Globals:
       Variables:
         message: "Hello from Lambda"
   Api:
+    OpenApiVersion: 3.0.1
     TracingEnabled: True
+    GatewayResponses:
+      DEFAULT_4XX:
+        StatusCode: "400"
+        ResponseParameters:
+          Headers:
+            gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+            gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        ResponseTemplates:
+          application/json: !Sub '{"message": "${ApiGatewayResponseMessage400}"}'
+      BAD_REQUEST_PARAMETERS:
+        StatusCode: "400"
+        ResponseParameters:
+          Headers:
+            gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+            gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        ResponseTemplates:
+          application/json: '{"message": "The parameters is not properly formatted."}'
+      BAD_REQUEST_BODY:
+        StatusCode: "400"
+        ResponseParameters:
+          Headers:
+            gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+            gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        ResponseTemplates:
+          application/json: '{"message": "The body is not properly formatted."}'
+      ACCESS_DENIED:
+        StatusCode: "403"
+        ResponseParameters:
+          Headers:
+            gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+            gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        ResponseTemplates:
+          application/json: !Sub '{"message": "${ApiGatewayResponseMessage403}"}'
+
+      DEFAULT_5XX:
+        ResponseParameters:
+          Headers:
+            gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+            gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        ResponseTemplates:
+          application/json: !Sub '{"message": "${ApiGatewayResponseMessage500}"}'
+    
 
 Resources:
   LabsLayer:
