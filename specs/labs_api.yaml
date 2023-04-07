@@ -17,6 +17,8 @@ x-amazon-apigateway-request-validators:
 paths:
   /labs/greetings/hello:
     get:
+      security:
+        - api_key: []
       summary: Returns a hello message with IP address
       description: Returns a hello message with IP address
       operationId: LabsGreetingsGETHello
@@ -74,6 +76,8 @@ paths:
 
   /labs/greetings/name/{value}:
     get:
+      security:
+        - api_key: []    
       summary: Returns a hello message using RequestStreamHandler
       description: Returns a hello message with name
       operationId: LabsGreetingsGETHello2
@@ -161,6 +165,8 @@ paths:
                 
   /labs/balances/{id}:
     get:
+      security:
+        - api_key: []
       summary: Returns a hello message using aws_proxy integration
       description: Returns a hello message with IP address
       operationId: LabsBalancesGETByIdLambda
@@ -187,6 +193,8 @@ paths:
           
   /labs/balances:
     get:
+      security:
+        - api_key: []
       x-amazon-apigateway-request-validator: all
       summary: Returns all balances
       description: Returns all balances from database
@@ -409,6 +417,8 @@ paths:
         type: mock
   /dummy/put:
     put:
+      security:
+        - api_key: []
       x-amazon-apigateway-request-validator: all
       summary: Returns all dummy data
       description: Returns all Dummy data
@@ -695,7 +705,6 @@ components:
           type: object
           additionalProperties: true
 
-
   headers:
     Content-Language:
       description: "The content language"
@@ -728,7 +737,6 @@ components:
       required: true
       schema:
         type: string
-
 
   responses:
     Response400:
@@ -863,3 +871,10 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/ErrorResponse"
+
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: 'API key or aborts with Unauthorized'

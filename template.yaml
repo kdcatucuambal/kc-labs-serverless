@@ -351,8 +351,6 @@ Resources:
       Principal: "apigateway.amazonaws.com"
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayApi}*/*/*"
 
-
-
   LabsRole:
     Type: "AWS::IAM::Role"
     Properties:
@@ -389,7 +387,29 @@ Resources:
                   - "xray:GetSamplingStatisticSummaries"
                 Resource: "*"
 
+  LabsUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      UsagePlanName: !Sub "${EnvironmentId}-LabsUsagePlan"
+      Description: "Usage plan for Labs API"
+      ApiStages:
+        - ApiId: !Ref ApiGatewayApi
+          Stage: "v1"
+        - ApiId: !Ref ApiGatewayApi
+          Stage: "Stage"
 
+  LabsApiKey:
+    Type: AWS::ApiGateway::ApiKey
+    Properties:
+      Enabled: true
+      Name: !Sub "${EnvironmentId}-LabsApiKey"
+
+  LabsUsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref LabsApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref LabsUsagePlan
 
 Outputs:
   LabsBalancesGETByIdLambdaVersion:
