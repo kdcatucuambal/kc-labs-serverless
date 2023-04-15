@@ -39,4 +39,17 @@ public class BalanceService {
         return balances;
     }
 
+    public Balance saveBalance(Balance balance){
+        logger.info("Saving balance: " + balance.toString());
+        return balance;
+    }
+
+    public void deleteBalance(Balance balance){
+
+    }
+
+    public void updateBalance(Balance balance){
+
+    }
+
 }
