@@ -3,7 +3,6 @@ package com.kc.cloud.labs.aws.lambda.balances;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.kc.cloud.labs.aws.services.BalanceService;
-import com.kc.cloud.labs.aws.utils.KcUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,11 +18,7 @@ public class LabsBalancesPST implements RequestStreamHandler {
 
     @Override
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
-        String jsonRequest = KcUtil.convertInputStreamToString(inputStream);
-        logger.info("Info Request: " + jsonRequest);
-        outputStream.write("Balance created".getBytes());
+
+
     }
-
-
-
 }
