@@ -2,3 +2,4 @@ layer/
 node_modules/
 dist/
 packaged.yaml
+test.js

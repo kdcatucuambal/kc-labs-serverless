@@ -17,7 +17,7 @@ export class KcUtil {
                 Statement: [
                     {
                         Action: 'execute-api:Invoke',
-                        Effect: payload.principalId,
+                        Effect: payload.effect,
                         Resource: [payload.resource]
                     }
                 ]
