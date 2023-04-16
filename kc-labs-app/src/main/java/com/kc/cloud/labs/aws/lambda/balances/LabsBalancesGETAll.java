@@ -6,13 +6,9 @@ import com.amazonaws.xray.AWSXRay;
 import com.amazonaws.xray.entities.Subsegment;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kc.cloud.labs.aws.exceptions.LabServerlessException;
-import com.kc.cloud.labs.aws.models.Balance;
-import com.kc.cloud.labs.aws.models.Response;
+import com.kc.cloud.labs.aws.models.app.Balance;
+import com.kc.cloud.labs.aws.models.app.Response;
 import com.kc.cloud.labs.aws.services.BalanceService;
-import lombok.SneakyThrows;
-import org.apache.http.HttpException;
-import org.apache.http.HttpStatus;
 
 import java.io.*;
 import java.util.List;

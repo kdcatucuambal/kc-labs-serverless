@@ -1,7 +1,8 @@
 package com.kc.cloud.labs.aws.services;
 
-import com.kc.cloud.labs.aws.models.Balance;
-import com.kc.cloud.labs.aws.models.Record;
+import com.kc.cloud.labs.aws.models.app.Balance;
+import com.kc.cloud.labs.aws.models.app.Record;
+import com.kc.cloud.labs.aws.models.dtos.BalanceDto;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -39,8 +40,14 @@ public class BalanceService {
         return balances;
     }
 
-    public Balance saveBalance(Balance balance){
-        logger.info("Saving balance: " + balance.toString());
+    public Balance saveBalance(BalanceDto balanceDto){
+        logger.info("Saving balance DTO: " + balanceDto.toString());
+        Balance balance = new Balance();
+        balance.setCode(balanceDto.getCode());
+        balance.setCurrent(balanceDto.getCurrent());
+        balance.setAverage(balanceDto.getAverage());
+        balance.setUsername(balanceDto.getUsername());
+        balance.setRecords(new ArrayList<>());
         return balance;
     }
 

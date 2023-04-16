@@ -4,8 +4,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kc.cloud.labs.aws.lambda.balances.LabsBalancesGETById;
-import com.kc.cloud.labs.aws.models.Record;
-import com.kc.cloud.labs.aws.models.Response;
+import com.kc.cloud.labs.aws.models.app.Record;
+import com.kc.cloud.labs.aws.models.app.Response;
 
 import java.io.*;
 import java.util.Date;

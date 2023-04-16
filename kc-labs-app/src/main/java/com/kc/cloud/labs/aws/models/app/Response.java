@@ -1,4 +1,4 @@
-package com.kc.cloud.labs.aws.models;
+package com.kc.cloud.labs.aws.models.app;
 
 import lombok.Getter;
 import lombok.Setter;
