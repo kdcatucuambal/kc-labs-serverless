@@ -148,7 +148,7 @@ Resources:
       LicenseInfo: "MIT"
       RetentionPolicy: Retain
 
-  ApiGatewayApi:
+  LabsApiGateway:
     DependsOn:
       - ApiCWLRoleArnAccount
     Type: AWS::Serverless::Api
@@ -173,12 +173,12 @@ Resources:
   LabsDeployment:
     Type: AWS::ApiGateway::Deployment
     Properties:
-      RestApiId: !Ref ApiGatewayApi
+      RestApiId: !Ref LabsApiGateway
 
   LabsApiGatewayLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub "API-Gateway-Execution-Logs_${ApiGatewayApi}/v1"
+      LogGroupName: !Sub "API-Gateway-Execution-Logs_${LabsApiGateway}/v1"
       RetentionInDays: !Ref LogRetentionInDays
 
 
@@ -245,7 +245,7 @@ Resources:
           Properties:
             Path: /labs/greetings/hello
             Method: get
-            RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref LabsApiGateway
 
   LabsGreetingGETNameLambda:
     Type: AWS::Serverless::Function
@@ -264,7 +264,7 @@ Resources:
           Properties:
             Path: /labs/greetings/name/{value}
             Method: get
-            RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref LabsApiGateway
 
   LabsBalancesGETByIdLambda:
     Type: AWS::Serverless::Function
@@ -285,7 +285,7 @@ Resources:
           Properties:
             Path: /labs/balances/{id}
             Method: get
-            RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref LabsApiGateway
   
   LabsBalancesGETByIdAliasProduction:
     Type: AWS::Lambda::Alias
@@ -312,7 +312,7 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Sub "${LabsBalancesGETByIdLambda}:${LambdaAliasProduction}"
       Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayApi}*/*/*"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${LabsApiGateway}*/*/*"
 
   LabsBalancesGETAllLambda:
     Type: AWS::Serverless::Function
@@ -333,7 +333,7 @@ Resources:
           Properties:
             Path: /labs/balances
             Method: get
-            RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref LabsApiGateway
 
   LabsBalancesGETAllAliasProduction:
     Type: AWS::Lambda::Alias
@@ -360,7 +360,7 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Sub "${LabsBalancesGETAllLambda}:${LambdaAliasProduction}"
       Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayApi}*/*/*"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${LabsApiGateway}*/*/*"
 
 
   LabsBalancesPSTLambda:
@@ -382,7 +382,7 @@ Resources:
           Properties:
             Path: /labs/balances
             Method: post
-            RestApiId: !Ref ApiGatewayApi
+            RestApiId: !Ref LabsApiGateway
 
   LabsBalancesPSTAliasProduction:
     Type: AWS::Lambda::Alias
@@ -409,7 +409,7 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Sub "${LabsBalancesPSTLambda}:${LambdaAliasProduction}"
       Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayApi}*/*/*"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${LabsApiGateway}*/*/*"
 
   LabsDummyPUTLambda:
     Type: AWS::Serverless::Function
@@ -430,7 +430,7 @@ Resources:
           Properties:
             Path: /dummy/put
             Method: put
-            RestApiId: !Ref ApiGatewayApi  
+            RestApiId: !Ref LabsApiGateway  
 
   LabsDummyPUTAliasProduction:
     Type: AWS::Lambda::Alias
@@ -457,7 +457,7 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Sub "${LabsDummyPUTLambda}:${LambdaAliasProduction}"
       Principal: "apigateway.amazonaws.com"
-      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayApi}*/*/*"
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${LabsApiGateway}*/*/*"
 
   LabsRole:
     Type: "AWS::IAM::Role"
@@ -497,14 +497,16 @@ Resources:
 
   LabsUsagePlan:
     Type: AWS::ApiGateway::UsagePlan
+    DependsOn:
+      - LabsDeployment
     Properties:
       UsagePlanName: !Sub "${EnvironmentId}-LabsUsagePlan"
       Description: "Usage plan for Labs API"
       ApiStages:
-        - ApiId: !Ref ApiGatewayApi
+        - ApiId: !Ref LabsApiGateway
           Stage: "v1"
-        - ApiId: !Ref ApiGatewayApi
-          Stage: "Stage"
+        # - ApiId: !Ref LabsApiGateway
+        #   Stage: "Stage"
 
   LabsApiKey:
     Type: AWS::ApiGateway::ApiKey
