@@ -3,7 +3,7 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   kc-labs-serverless
 
-  Sample SAM Template for kc-labs-serverless
+  Sample SAM Template for kc-labs-serverless, using AWS Serverless Application Model
 
 Parameters:
   EnvironmentId:
@@ -29,7 +29,6 @@ Parameters:
   LambdaAuthorizer:
     Type: String
     Description: Lambda Authorizer
-    Default: kec-authorizer-lambda
   
   ProvisionedConcurrencyConfigEnabled:
     Type: String

@@ -1,0 +1,41 @@
+{
+    "parameters": {
+        "author": "Kevin Catucuamba",
+        "email": "catucuambakevin@gmail.com",
+        "EnvironmentId": "kec"
+    },
+    "deploy": {
+        "stack-name": "kec-labs",
+        "s3-bucket": "dev1-kc-labs-serverless",
+        "prefix": "kec",
+        "aws-default-region": "us-east-1",
+        "capabilities": "CAPABILITY_AUTO_EXPAND CAPABILITY_IAM CAPABILITY_NAMED_IAM",
+        "non-confirm-change-set": "true",
+        "parameters":[
+            {
+                "parameterKey": "EnvironmentId",
+                "parameterValue": "kec"
+            },
+            {
+                "parameterKey": "LambdaAliasProduction",
+                "parameterValue": "production"
+            },
+            {
+                "parameterKey": "LambdaAliasBeta",
+                "parameterValue": "beta"
+            },
+            {
+                "parameterKey": "LogRetentionInDays",
+                "parameterValue": 5
+            },
+            {
+                "parameterKey": "LambdaAuthorizer",
+                "parameterValue": "kec-authorizer-lambda"
+            },
+            {
+                "parameterKey": "ProvisionedConcurrencyConfigEnabled",
+                "parameterValue": "false"
+            }
+        ]
+    }
+}
