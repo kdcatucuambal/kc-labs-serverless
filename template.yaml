@@ -498,7 +498,7 @@ Resources:
   LabsUsagePlan:
     Type: AWS::ApiGateway::UsagePlan
     DependsOn:
-      - LabsDeployment
+      - LabsApiGateway
     Properties:
       UsagePlanName: !Sub "${EnvironmentId}-LabsUsagePlan"
       Description: "Usage plan for Labs API"

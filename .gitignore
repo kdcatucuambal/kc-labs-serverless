@@ -25,3 +25,5 @@ build/
 .aws-sam/
 
 packaged.yaml
+
+.stack
