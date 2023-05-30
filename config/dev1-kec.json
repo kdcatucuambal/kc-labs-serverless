@@ -12,7 +12,7 @@
             "backend-branch": "develop"
         },
         "deploy": {
-            "stack-name": "${EnvironmentId}-labs",
+            "stack-name": "${EnvironmentId}-labs-serverless",
             "s3-bucket": "dev1-kc-labs-serverless",
             "prefix": "${EnvironmentId}",
             "aws-default-region": "us-east-1",

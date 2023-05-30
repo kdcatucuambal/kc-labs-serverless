@@ -1,0 +1,185 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  SAM template for kc-labs-serverless, main resources for lambdas and api gateway
+
+Parameters:
+  EnvironmentId:
+    Type: String
+    Description: Environment ID
+
+  LambdaAliasProduction:
+    Type: String
+    Description: Lambda Alias for Production
+
+  LambdaAliasBeta:
+    Type: String
+    Description: Environment alias
+
+  LogRetentionInDays:
+    Type: String
+    Description: Log retention in days
+
+  LambdaAuthorizer:
+    Type: String
+    Description: Lambda Authorizer
+  
+  ProvisionedConcurrencyConfigEnabled:
+    Type: String
+    Description: Enable Provisioned Concurrency Config
+
+  ApiGatewayResponseMessage400:
+    Type: String
+    Description: message error 400
+
+  ApiGatewayResponseMessage401:
+    Type: String
+    Description: message error 401
+
+  ApiGatewayResponseMessage403:
+    Type: String
+    Description: message error 403
+
+  ApiGatewayResponseMessage404:
+    Type: String
+    Description: message error 404
+
+  ApiGatewayResponseMessage405:
+    Type: String
+    Description: message error 405
+
+  ApiGatewayResponseMessage409:
+    Type: String
+    Description: message error 409
+
+  ApiGatewayResponseMessage429:
+    Type: String
+    Description: message error 429
+
+  ApiGatewayResponseMessage500:
+    Type: String
+    Description: message error 500
+
+Resources:
+  LabsLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Join
+        - ""
+        - - !Ref EnvironmentId
+          - labs-layer
+      Description: Layer libs for kc-labs-serverless
+      ContentUri: ../kc-labs-app/dependencies
+      CompatibleRuntimes:
+        - java11
+        - java8
+      CompatibleArchitectures:
+        - x86_64
+      LicenseInfo: "MIT"
+      RetentionPolicy: Retain
+
+  LabsRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: !Sub "${EnvironmentId}-LabsRole"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+      Path: /
+      Policies:
+        - PolicyName: !Sub "${EnvironmentId}-LabsPolicy" 
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                  - "ec2:CreateNetworkInterface"
+                  - "ec2:DescribeNetworkInterfaces"
+                  - "ec2:DeleteNetworkInterface"
+                  - "ec2:AssignPrivateIpAddresses"
+                  - "ec2:UnassignPrivateIpAddresses"
+                  - "xray:PutTraceSegments"
+                  - "xray:PutTelemetryRecords"
+                  - "xray:GetSamplingRules"
+                  - "xray:GetSamplingTargets"
+                  - "xray:GetSamplingStatisticSummaries"
+                Resource: "*"
+
+  LabsUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      UsagePlanName: !Sub "${EnvironmentId}-LabsUsagePlan"
+      Description: "Usage plan for Labs API"
+      ApiStages:
+        - ApiId: !GetAtt BalancesLambdas.Outputs.ApiId
+          Stage: !GetAtt BalancesLambdas.Outputs.ApiStage
+
+  LabsApiKey:
+    Type: AWS::ApiGateway::ApiKey
+    Properties:
+      Enabled: true
+      Name: !Sub "${EnvironmentId}-LabsApiKey"
+
+  LabsUsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref LabsApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref LabsUsagePlan
+
+  BalancesLambdas:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: labs-balances-template.yaml
+      Parameters:
+        EnvironmentId: !Ref EnvironmentId
+        LambdaAliasProduction: !Ref LambdaAliasProduction
+        LambdaAliasBeta: !Ref LambdaAliasBeta
+        LogRetentionInDays: !Ref LogRetentionInDays
+        LambdaAuthorizer: !Ref LambdaAuthorizer
+        ProvisionedConcurrencyConfigEnabled: !Ref ProvisionedConcurrencyConfigEnabled
+        LabsRoleArn: !GetAtt LabsRole.Arn
+        LabsLayer: !Ref LabsLayer 
+        ApiGatewayResponseMessage400: !Ref ApiGatewayResponseMessage400
+        ApiGatewayResponseMessage401: !Ref ApiGatewayResponseMessage401
+        ApiGatewayResponseMessage403: !Ref ApiGatewayResponseMessage403
+        ApiGatewayResponseMessage404: !Ref ApiGatewayResponseMessage404
+        ApiGatewayResponseMessage405: !Ref ApiGatewayResponseMessage405
+        ApiGatewayResponseMessage409: !Ref ApiGatewayResponseMessage409
+        ApiGatewayResponseMessage429: !Ref ApiGatewayResponseMessage429
+        ApiGatewayResponseMessage500: !Ref ApiGatewayResponseMessage500
+
+Outputs:
+  LabsLayer:
+    Description: "Labs Layer ARN"
+    Value: !Ref LabsLayer
+
+  LabsRole:
+    Description: "Labs Role ARN"
+    Value: !Ref LabsRole
+
+  LabsUsagePlan:
+    Description: "Labs Usage Plan ID"
+    Value: !Ref LabsUsagePlan
+
+  LabsApiKey:
+    Description: "Labs API Key"
+    Value: !Ref LabsApiKey
+
+  LabsUsagePlanKey:
+    Description: "Labs Usage Plan Key"
+    Value: !Ref LabsUsagePlanKey
+        
+    
+
+
+  
