@@ -1,8 +1,12 @@
-import { APIGatewayAuthorizerResult } from "aws-lambda";
-import { PolicyPayload } from "../models/PolicyPayload";
+import {APIGatewayAuthorizerResult} from "aws-lambda";
+import {PolicyPayload} from "../models/PolicyPayload";
 
 
 export class KcUtil {
+
+    static ALLOW_TEXT = "Allow";
+    static DENY_TEXT = "Deny";
+    static PRINCIPAL_ID = "user|kcatucuamba";
 
     static async validateToken(token: string): Promise<boolean> {
         //TODO: Implement token validation
@@ -10,7 +14,7 @@ export class KcUtil {
     }
 
     static async generatePolicy(payload: PolicyPayload): Promise<APIGatewayAuthorizerResult> {
-        const policy: APIGatewayAuthorizerResult = {
+        return {
             principalId: payload.principalId,
             policyDocument: {
                 Version: '2012-10-17',
@@ -27,7 +31,6 @@ export class KcUtil {
                 number: 1,
                 bool: true
             }
-        }
-        return policy;
+        };
     }
 }
