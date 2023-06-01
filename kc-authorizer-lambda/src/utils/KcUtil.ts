@@ -6,7 +6,7 @@ export class KcUtil {
 
     static async validateToken(token: string): Promise<boolean> {
         //TODO: Implement token validation
-        return token === 'Bearer 123';
+        return token === 'Bearer xyzyouarevalid';
     }
 
     static async generatePolicy(payload: PolicyPayload): Promise<APIGatewayAuthorizerResult> {

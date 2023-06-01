@@ -25,37 +25,25 @@ public class LabsBalancesGETAll implements RequestStreamHandler {
 
     @Override
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
-
+        logger.info("Invoking lambda: LabsBalancesGETAll");
         String request = this.getRequestInput(inputStream);
-        logger.info("Info Request: " + request);
-        //throw new RuntimeException("409");
-
-//        try {
-//            throw new LabServerlessException("Something went wrong");
-//        } catch (LabServerlessException e) {
-//            logger.severe(e.getMessage());
-//        }
-
-        try (Subsegment subsegment = AWSXRay.beginSubsegment("Get All Balances")) {
-            List<Balance> balances = this.balanceService.getAllBalances();
-            AWSXRay.endSubsegment();
-            String jsonResponse = this.mapper.writeValueAsString(this.getResponse(balances));
-            outputStream.write(jsonResponse.getBytes());
-        } catch (Exception e) {
-            logger.severe(e.getMessage());
-        }
+        logger.info("Request: " + request);
+        List<Balance> balances = this.balanceService.getAllBalances();
+        String jsonResponse = this.mapper.writeValueAsString(this.getResponse(balances));
+        logger.info("Response: " + jsonResponse);
+        outputStream.write(jsonResponse.getBytes());
     }
 
     public Response<List<Balance>> getResponse(List<Balance> balances) throws JsonProcessingException {
         Response<List<Balance>> response = new Response<>();
-        response.setStatusCode(409);
+        response.setStatusCode(200);
         response.setBody(balances);
         return response;
     }
 
     public String getRequestInput(InputStream input) throws IOException {
         return  new BufferedReader(new InputStreamReader(input))
-                .lines().collect(Collectors.joining(System.lineSeparator()));
+                .lines().collect(Collectors.joining("\n"));
     }
 
 }

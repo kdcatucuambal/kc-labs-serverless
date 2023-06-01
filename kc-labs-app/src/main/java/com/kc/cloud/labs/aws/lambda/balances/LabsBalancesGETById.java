@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kc.cloud.labs.aws.models.app.Balance;
 import com.kc.cloud.labs.aws.models.app.CustomResponse;
+import com.kc.cloud.labs.aws.models.app.Response;
 import com.kc.cloud.labs.aws.services.BalanceService;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -21,6 +22,7 @@ public class LabsBalancesGETById implements RequestStreamHandler {
 
     private static final Logger logger = Logger.getLogger(LabsBalancesGETById.class.getName());
     private final BalanceService balanceService;
+    private final ObjectMapper mapper = new ObjectMapper();
     public LabsBalancesGETById() {
         logger.info("LabsBalancesGETById constructor");
         this.balanceService = new BalanceService();
@@ -28,88 +30,34 @@ public class LabsBalancesGETById implements RequestStreamHandler {
 
     @Override
     public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
-        String request = new BufferedReader(new InputStreamReader(input))
-                .lines().collect(Collectors.joining(System.lineSeparator()));
-        logger.info("Info Request: " + request);
-        //Get a Mappping of the request
-        ObjectMapper mapper = new ObjectMapper();
+        String request = this.getRequestInput(input);
+        logger.info("Request: " + request);
         TypeReference<HashMap<String, Object>> typeRef = new TypeReference<>() {};
         Map<String, Object> requestMap = mapper.readValue(request, typeRef);
+        logger.info("Info requestMap: " + requestMap.toString());
+        Map<String, Object> getbody = (Map<String, Object>)requestMap.get("getbody");
+        Map<String, String> params = (Map<String, String>)getbody.get("params");
 
-        Object pathPatametersObject = requestMap.get("pathParameters");
-
-        Subsegment subsegment = AWSXRay.beginSubsegment("Get Balance By Id");
-
-        Map<String, String> pathPatameters = (Map<String, String>) pathPatametersObject;
-
-        String balanceId = pathPatameters.get("id");
+        String balanceId = params.get("id");
 
         logger.info("Info balanceId: " + balanceId);
 
-        logger.info("Info pathPatameters: " + pathPatameters.toString());
-        logger.info("Type pathPatameters: " + pathPatameters.getClass().getName());
-
         Balance balanceFound = this.balanceService.getBalanceByCode(balanceId);
-        String balanceFoundJson = mapper.writeValueAsString(balanceFound);
-
-        CustomResponse response = new CustomResponse();
-
-        AWSXRay.endSubsegment();
-
-        Map<String, String>  headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
-        headers.put("X-Custom-Header", "application/json");
-        headers.put("kec-header", "kec-value");
-        response.setHeaders(headers);
-        response.setStatusCode(200);
-        response.setBody(balanceFoundJson);
-
-        String responseJson = mapper.writeValueAsString(response);
-        output.write(responseJson.getBytes(StandardCharsets.UTF_8));
+        String jsonResponse = this.mapper.writeValueAsString(this.getResponse(balanceFound));
+        logger.info("Response: " + jsonResponse);
+        output.write(jsonResponse.getBytes(StandardCharsets.UTF_8));
     }
 
+    public Response<Balance> getResponse(Balance balance) {
+        Response<Balance> response = new Response<>();
+        response.setStatusCode(200);
+        response.setBody(balance);
+        return response;
+    }
 
-//    @Override
-//    public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
-//        String requestBody = new BufferedReader(new InputStreamReader(input))
-//                .lines().collect(Collectors.joining(System.lineSeparator()));
-//
-//        logger.info("requestBody: " + requestBody);
-//
-//        CustomResponse response = new CustomResponse();
-//        Map<String, String>  headers = new HashMap<>();
-//        headers.put("Content-Type", "application/json");
-//        headers.put("X-Custom-Header", "application/json");
-//        response.setHeaders(headers);
-//        response.setStatusCode(200);
-//
-//        response.setBody("{\"message\":\"Hello from LabsBalancesGETById\"}");
-//
-//        ObjectMapper mapper = new ObjectMapper();
-//        String jsonResponse = mapper.writeValueAsString(response);
-//
-//        logger.info("Response: " + jsonResponse);
-//        output.write(jsonResponse.getBytes(StandardCharsets.UTF_8));
-//    }
+    public String getRequestInput(InputStream input) throws IOException {
+        return  new BufferedReader(new InputStreamReader(input))
+                .lines().collect(Collectors.joining(System.lineSeparator()));
+    }
 
-
-//    @Override
-//    public CustomResponse handleRequest(APIGatewayProxyRequestEvent input, Context context) {
-//
-//        logger.info("Input: " + input);
-//
-//        //APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
-//        CustomResponse response = new CustomResponse();
-//        Map<String, String>  headers = new HashMap<>();
-//        headers.put("Content-Type", "application/json");
-//        headers.put("X-Custom-Header", "application/json");
-//        response.setHeaders(headers);
-//        response.setStatusCode(200);
-//        response.setBody("{\"message\":\"Hello from LabsBalancesGETById\"}");
-//
-//
-//        logger.info("Response: " + response);
-//
-//        return response;
-//    }
 }

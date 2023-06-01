@@ -16,7 +16,7 @@ public class KcUtil {
 
     public static String convertInputStreamToString(InputStream inputStream)  {
         return new BufferedReader(new InputStreamReader(inputStream))
-                .lines().collect(Collectors.joining("\n"));
+                .lines().collect(Collectors.joining(System.lineSeparator()));
     }
 
     public static String serializeObject(Object object) throws JsonProcessingException {

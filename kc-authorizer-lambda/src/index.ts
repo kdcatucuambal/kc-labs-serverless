@@ -23,20 +23,21 @@ const logger = createLogger({
 });
 
 export const handler: APIGatewayTokenAuthorizerHandler = async (event, context) => {
-    logger.info('Event: ' + event);
-    logger.info('Context: ' + (context));
+    logger.info('Event: ' + JSON.stringify(event));
+    logger.info('Context: ' + JSON.stringify(context));
     const token = event.authorizationToken;
     const payload: PolicyPayload = {
         principalId: 'user|kcatucuamba',
         resource: event.methodArn,
         effect: 'Allow'
     };
+
     if (!KcUtil.validateToken(token)) {
         payload.effect = 'Deny';
     }
     
     const policy = await KcUtil.generatePolicy(payload);
-    logger.info('Policy: ' + policy);
+    logger.info('Policy: ' + JSON.stringify(policy));
     console.log('Policy (Log): ' + JSON.stringify(policy));
     return policy;
 }

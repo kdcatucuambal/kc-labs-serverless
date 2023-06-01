@@ -12,6 +12,7 @@ import java.util.List;
 public class Balance {
 
     public String code;
+
     public String username;
 
     public BigDecimal average;
