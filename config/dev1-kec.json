@@ -37,7 +37,7 @@
                 },
                 {
                     "parameterKey": "LambdaAuthorizer",
-                    "parameterValue": "kec-authorizer-lambda"
+                    "parameterValue": "dev1-AuthorizerLambda"
                 },
                 {
                     "parameterKey": "ProvisionedConcurrencyConfigEnabled",
