@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: 
-    Fn::Sub: Labs API - ${AWS::StackName}
+    Fn::Sub: ${EnvironmentId}-labs-api
   version: 0.0.1
   description: |
     This is a sample api labs using Java
@@ -663,6 +663,7 @@ components:
         type:
           type: string
           description: The type
+    
     ErrorResponse:
       type: object
       properties:
@@ -682,7 +683,6 @@ components:
         values:
           type: object
           additionalProperties: true
-
 
     RuleExecutePUTRq:
         description: "Cuerpo de petición para ejecutar la api de reglas acepta nulls"
