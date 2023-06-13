@@ -60,6 +60,10 @@ Parameters:
     Type: String
     Description: message error 500
 
+  LayerCodeGuruProfilerArn:
+    Type: String
+    Description: Layer CodeGuru Profiler ARN
+
 Resources:
   LabsLayer:
     Type: AWS::Serverless::LayerVersion
@@ -149,6 +153,7 @@ Resources:
         ProvisionedConcurrencyConfigEnabled: !Ref ProvisionedConcurrencyConfigEnabled
         LabsRoleArn: !GetAtt LabsRole.Arn
         LabsLayer: !Ref LabsLayer 
+        LayerCodeGuruProfilerArn: !Ref LayerCodeGuruProfilerArn
         ApiGatewayResponseMessage400: !Ref ApiGatewayResponseMessage400
         ApiGatewayResponseMessage401: !Ref ApiGatewayResponseMessage401
         ApiGatewayResponseMessage403: !Ref ApiGatewayResponseMessage403

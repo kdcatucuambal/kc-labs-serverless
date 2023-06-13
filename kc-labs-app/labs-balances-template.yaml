@@ -68,10 +68,13 @@ Parameters:
     Type: String
     Description: message error 500
 
+  LayerCodeGuruProfilerArn:
+    Type: String
+    Description: Layer CodeGuru Profiler ARN
+
 
 Conditions:
   LambdaProvisioned: !Equals [!Ref ProvisionedConcurrencyConfigEnabled, "true"]
-
 
 Globals:
   Function:
@@ -85,6 +88,10 @@ Globals:
     Environment:
       Variables:
         message: "Hello from Lambda"
+        AWS_CODEGURU_PROFILER_GROUP_NAME: "dev1-testLambda"
+        AWS_CODEGURU_PROFILER_TARGET_REGION: "us-east-1"
+        AWS_CODEGURU_PROFILER_HEAP_SUMMARY_ENABLED: "true"
+        JAVA_TOOL_OPTIONS: "-javaagent:/opt/codeguru-profiler-java-agent-standalone.jar"
   Api:
     OpenApiVersion: 3.0.1
     TracingEnabled: True
@@ -170,12 +177,12 @@ Resources:
       FunctionName: !Sub "${EnvironmentId}-LabsBalancesGETByIdLambda"
       Layers:
         - !Ref LabsLayer
+        - !Ref LayerCodeGuruProfilerArn
       Role: !Ref LabsRoleArn
       AutoPublishAlias: !Ref LambdaAliasBeta
       Environment:
         Variables:
-          PARAM1: VALUE
-          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+          FunctionName: !Sub "${EnvironmentId}-LabsBalancesGETByIdLambda"
       Events:
         EventApi:
           Type: Api
@@ -218,12 +225,12 @@ Resources:
       FunctionName: !Sub "${EnvironmentId}-LabsBalancesGETAllLambda"
       Layers:
         - !Ref LabsLayer
+        - !Ref LayerCodeGuruProfilerArn
       Role: !Ref LabsRoleArn
       AutoPublishAlias: !Ref LambdaAliasBeta
       Environment:
         Variables:
-          PARAM1: VALUE
-          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+          FunctionName: !Sub "${EnvironmentId}-LabsBalancesGETAllLambda"
       Events:
         EventApi:
           Type: Api
@@ -267,12 +274,12 @@ Resources:
       FunctionName: !Sub "${EnvironmentId}-LabsBalancesPSTLambda"
       Layers:
         - !Ref LabsLayer
+        - !Ref LayerCodeGuruProfilerArn
       Role: !Ref LabsRoleArn
       AutoPublishAlias: !Ref LambdaAliasBeta
       Environment:
         Variables:
-          PARAM1: VALUE
-          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+          FunctionName: !Sub "${EnvironmentId}-LabsBalancesPSTLambda"
       Events:
         EventApi:
           Type: Api

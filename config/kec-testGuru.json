@@ -1,0 +1,53 @@
+{
+    "parameters": {
+        "author": "Kevin Catucuamba",
+        "email": "catucuambakevin@gmail.com",
+        "EnvironmentId": "codeguru",
+        "Module": "Labs"
+    },
+    "pipeline": {
+        "project": {
+            "project-key": "kc-lab-serverless",
+            "path-service": "kc-labs-app",
+            "backend-branch": "develop"
+        },
+        "deploy": {
+            "stack-name": "${EnvironmentId}-labs-serverless",
+            "s3-bucket": "dev1-kc-labs-serverless",
+            "prefix": "${EnvironmentId}",
+            "aws-default-region": "us-east-1",
+            "capabilities": "CAPABILITY_AUTO_EXPAND CAPABILITY_IAM CAPABILITY_NAMED_IAM",
+            "non-confirm-change-set": "true",
+            "parameters": [
+                {
+                    "parameterKey": "EnvironmentId",
+                    "parameterValue": "${EnvironmentId}"
+                },
+                {
+                    "parameterKey": "LambdaAliasProduction",
+                    "parameterValue": "production"
+                },
+                {
+                    "parameterKey": "LambdaAliasBeta",
+                    "parameterValue": "beta"
+                },
+                {
+                    "parameterKey": "LogRetentionInDays",
+                    "parameterValue": 5
+                },
+                {
+                    "parameterKey": "LambdaAuthorizer",
+                    "parameterValue": "dev1-AuthorizerLambda"
+                },
+                {
+                    "parameterKey": "ProvisionedConcurrencyConfigEnabled",
+                    "parameterValue": "false"
+                },
+                {
+                    "parameterKey": "LayerCodeGuruProfilerArn",
+                    "parameterValue": "arn:aws:lambda:us-east-1:157417159150:layer:AWSCodeGuruProfilerJavaAgentLayer:5"
+                }
+            ]
+        }
+    }
+}

@@ -28,6 +28,10 @@ Parameters:
     Type: String
     Description: Enable Provisioned Concurrency Config
 
+  LayerCodeGuruProfilerArn:
+    Type: String
+    Description: Layer CodeGuru Profiler ARN
+
 
 Resources:
   LambdasInfraestructure:
@@ -40,6 +44,7 @@ Resources:
         LambdaAliasBeta: !Ref LambdaAliasBeta
         LogRetentionInDays: !Ref LogRetentionInDays
         LambdaAuthorizer: !Ref LambdaAuthorizer
+        LayerCodeGuruProfilerArn: !Ref LayerCodeGuruProfilerArn
         ProvisionedConcurrencyConfigEnabled: !Ref ProvisionedConcurrencyConfigEnabled
         ApiGatewayResponseMessage400: "The message is not properly formatted."
         ApiGatewayResponseMessage401: "You are not authorized to access this resource."
