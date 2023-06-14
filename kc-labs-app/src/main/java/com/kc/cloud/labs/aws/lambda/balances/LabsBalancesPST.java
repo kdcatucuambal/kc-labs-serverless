@@ -28,7 +28,7 @@ public class LabsBalancesPST implements RequestStreamHandler {
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
         logger.info("Invoking lambda: LabsBalancesPST");
         String jsonRequest = KcUtil.convertInputStreamToString(inputStream);
-        logger.info("Request: " + jsonRequest);
+        logger.info("Request received: " + jsonRequest);
         RequestObject<BalanceDto> requestObject = KcUtil.deserializeObject(jsonRequest, new TypeReference<RequestObject<BalanceDto>>() {});
         Balance balanceCreated = balanceService.saveBalance(requestObject.getBody());
         String jsonResponse = KcUtil.serializeObject(this.getResponse(balanceCreated));

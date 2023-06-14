@@ -31,7 +31,7 @@ public class LabsBalancesGETById implements RequestStreamHandler {
     @Override
     public void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
         String request = this.getRequestInput(input);
-        logger.info("Request: " + request);
+        logger.info("Request received: " + request);
         TypeReference<HashMap<String, Object>> typeRef = new TypeReference<>() {};
         Map<String, Object> requestMap = mapper.readValue(request, typeRef);
         logger.info("Info requestMap: " + requestMap.toString());

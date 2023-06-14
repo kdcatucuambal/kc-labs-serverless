@@ -27,7 +27,7 @@ public class LabsBalancesGETAll implements RequestStreamHandler {
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
         logger.info("Invoking lambda: LabsBalancesGETAll");
         String request = this.getRequestInput(inputStream);
-        logger.info("Request: " + request);
+        logger.info("Request received: " + request);
         List<Balance> balances = this.balanceService.getAllBalances();
         String jsonResponse = this.mapper.writeValueAsString(this.getResponse(balances));
         logger.info("Response: " + jsonResponse);

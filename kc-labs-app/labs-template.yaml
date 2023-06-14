@@ -117,6 +117,8 @@ Resources:
                   - "xray:GetSamplingTargets"
                   - "xray:GetSamplingStatisticSummaries"
                 Resource: "*"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonCodeGuruProfilerAgentAccess
 
   LabsUsagePlan:
     Type: AWS::ApiGateway::UsagePlan
