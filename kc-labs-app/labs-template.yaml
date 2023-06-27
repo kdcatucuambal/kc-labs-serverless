@@ -64,10 +64,7 @@ Resources:
   LabsLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      LayerName: !Join
-        - ""
-        - - !Ref EnvironmentId
-          - labs-layer
+      LayerName: !Sub "${EnvironmentId}-LabsLayer"
       Description: Layer libs for kc-labs-serverless
       ContentUri: ../kc-labs-app/dependencies
       CompatibleRuntimes:
@@ -157,7 +154,6 @@ Resources:
         ApiGatewayResponseMessage409: !Ref ApiGatewayResponseMessage409
         ApiGatewayResponseMessage429: !Ref ApiGatewayResponseMessage429
         ApiGatewayResponseMessage500: !Ref ApiGatewayResponseMessage500
-
 Outputs:
   LabsLayer:
     Description: "Labs Layer ARN"
