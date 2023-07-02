@@ -109,6 +109,7 @@ Resources:
                   - "xray:GetSamplingRules"
                   - "xray:GetSamplingTargets"
                   - "xray:GetSamplingStatisticSummaries"
+                  - "dynamodb:*"
                 Resource: "*"
 
   LabsUsagePlan:
