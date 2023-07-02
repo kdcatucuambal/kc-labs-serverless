@@ -1,0 +1,607 @@
+openapi: 3.0.1
+info:
+  title:
+    Fn::Sub: ${EnvironmentId}-labs-products-api
+  version: 0.0.1
+  description: |
+    This is a sample api labs using Java, products
+
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params-only:
+    validateRequestBody: false
+    validateRequestParameters: true
+
+
+paths:
+  /labs/products/{id}:
+    get:
+      security:
+        - api_key: [ ]
+        - authorizer: [ ]
+      x-amazon-apigateway-request-validator: all
+      summary: Return a product by id
+      description: Return a product by id
+      operationId: LabsProductGETById
+      parameters:
+        - $ref: '#/components/parameters/x-request-id'
+        - $ref: '#/components/parameters/x-ip-address'
+        - $ref: '#/components/parameters/Authorization'
+
+        - name: id
+          in: path
+          description: Id of product to return
+          required: true
+          schema:
+            type: string
+            default: A001
+
+      responses:
+        200:
+          description: OK
+          headers:
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            x-jws-signature:
+              $ref: '#/components/headers/x-jws-signature'
+            Content-Language:
+              $ref: '#/components/headers/Content-Language'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+
+        400:
+          $ref: '#/components/responses/Response400'
+        401:
+          $ref: '#/components/responses/Response401'
+        403:
+          $ref: '#/components/responses/Response403'
+        404:
+          $ref: '#/components/responses/Response404'
+        409:
+          $ref: '#/components/responses/Response409'
+        429:
+          $ref: '#/components/responses/Response429'
+        500:
+          $ref: '#/components/responses/Response500'
+
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        type: aws
+        timeoutInMillis: 20000
+        uri:
+          Fn::Join:
+            - ""
+            - - Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsProductsGETByIdLambda.Arn}:"
+              - "${stageVariables.version_alias}/invocations"
+        passThroughBehavior: when_no_templates
+        requestTemplates:
+          application/json: |-
+            {
+              "header": {
+                "aws_request_id": "$context.requestId",
+                "x_authorization": "$input.params().header.get('Authorization')",
+                "x_request_id": "$input.params().header.get('x-request-id')",
+                "x_ip_address": "$input.params().header.get('x-ip-address')"
+              },
+              "body" : $input.json('$'),
+              "getbody": {
+                "queries":{
+                  #foreach($param in $input.params().querystring.keySet())
+                  "$param": "$util.escapeJavaScript($input.params().querystring.get($param))"#if($foreach.hasNext),#end
+                  #end
+                },
+                "params": {
+                  #foreach($param in $input.params().path.keySet())
+                  "$param": "$util.escapeJavaScript($input.params().path.get($param))"#if($foreach.hasNext),#end
+                  #end
+                }
+              },
+              "service": {
+                "apiId": "$context.apiId",
+                "operationId": "LabsProductsGetById"
+              }
+            }
+        responses:
+          default:
+            statusCode: 200
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                $input.json('$.body')
+          400:
+            statusCode: 400
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "El mensaje de solicitud no se encuentra debidamente formateado."}
+          401:
+            statusCode: 401
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "No se encuentra autorizado para realizar la operación."}
+
+          403:
+            statusCode: 403
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "La solicitud ha sido rechazada."}
+
+          404:
+            statusCode: 404
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "El objeto no fue encontrado."}
+
+          409:
+            statusCode: 409
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "La operación presentó un error durante la ejecución. :)"}
+
+          429:
+            statusCode: 429
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "Se ha excedido el número de solicitudes permitidas."}
+
+          500|.*timed.*:
+            statusCode: 500
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                #set($cause = $input.path('$.cause'))
+                 $cause.errorMessage
+
+  /labs/products:
+    get:
+      security:
+        - api_key: [ ]
+        - authorizer: [ ]
+      x-amazon-apigateway-request-validator: all
+      summary: Return all products
+      description: Return all products
+      operationId: LabsProductGETAll
+      parameters:
+        - $ref: '#/components/parameters/x-request-id'
+        - $ref: '#/components/parameters/x-ip-address'
+        - $ref: '#/components/parameters/Authorization'
+
+
+      responses:
+        200:
+          description: OK
+          headers:
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            x-jws-signature:
+              $ref: '#/components/headers/x-jws-signature'
+            Content-Language:
+              $ref: '#/components/headers/Content-Language'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+
+        400:
+          $ref: '#/components/responses/Response400'
+        401:
+          $ref: '#/components/responses/Response401'
+        403:
+          $ref: '#/components/responses/Response403'
+        404:
+          $ref: '#/components/responses/Response404'
+        409:
+          $ref: '#/components/responses/Response409'
+        429:
+          $ref: '#/components/responses/Response429'
+        500:
+          $ref: '#/components/responses/Response500'
+
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        type: aws
+        timeoutInMillis: 20000
+        uri:
+          Fn::Join:
+            - ""
+            - - Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsProductsGETAllLambda.Arn}:"
+              - "${stageVariables.version_alias}/invocations"
+        passThroughBehavior: when_no_templates
+        requestTemplates:
+          application/json: |-
+            {
+              "header": {
+                "aws_request_id": "$context.requestId",
+                "x_authorization": "$input.params().header.get('Authorization')",
+                "x_request_id": "$input.params().header.get('x-request-id')",
+                "x_ip_address": "$input.params().header.get('x-ip-address')"
+              },
+              "body" : $input.json('$'),
+              "getbody": {
+                "queries":{
+                  #foreach($param in $input.params().querystring.keySet())
+                  "$param": "$util.escapeJavaScript($input.params().querystring.get($param))"#if($foreach.hasNext),#end
+                  #end
+                },
+                "params": {
+                  #foreach($param in $input.params().path.keySet())
+                  "$param": "$util.escapeJavaScript($input.params().path.get($param))"#if($foreach.hasNext),#end
+                  #end
+                }
+              },
+              "service": {
+                "apiId": "$context.apiId",
+                "operationId": "LabsProductsGetById"
+              }
+            }
+        responses:
+          default:
+            statusCode: 200
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                $input.json('$.body')
+          400:
+            statusCode: 400
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "El mensaje de solicitud no se encuentra debidamente formateado."}
+          401:
+            statusCode: 401
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "No se encuentra autorizado para realizar la operación."}
+
+          403:
+            statusCode: 403
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "La solicitud ha sido rechazada."}
+
+          404:
+            statusCode: 404
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "El objeto no fue encontrado."}
+
+          409:
+            statusCode: 409
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "La operación presentó un error durante la ejecución. :)"}
+
+          429:
+            statusCode: 429
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "Se ha excedido el número de solicitudes permitidas."}
+
+          500|.*timed.*:
+            statusCode: 500
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                #set($cause = $input.path('$.cause'))
+                 $cause.errorMessage
+
+
+components:
+  schemas:
+    Product:
+      type: object
+      description: "The product object"
+      properties:
+        id:
+          type: string
+          description: "The product ID"
+        name:
+          type: string
+          description: "The product name"
+        description:
+          type: string
+          description: "The product description"
+        category:
+          type: string
+          description: "The product category"
+        price:
+          type: number
+          description: "The product price"
+        image:
+          type: string
+          description: "The product image"
+        stock:
+          type: number
+          description: "The product stock"
+        isAvailable:
+          type: boolean
+          description: "The product availability"
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: "The error message"
+
+
+  headers:
+    Content-Language:
+      description: "The content language"
+      schema:
+        type: string
+
+    x-jws-signature:
+      description: "The JWS signature"
+      schema:
+        type: string
+
+  parameters:
+    x-request-id:
+      name: "x-request-id"
+      description: "The request ID"
+      in: header
+      required: true
+      schema:
+        type: string
+    x-ip-address:
+      name: "x-ip-address"
+      description: "The IP address"
+      in: header
+      schema:
+        type: string
+    Authorization:
+      name: "Authorization"
+      description: "The authorization token"
+      in: header
+      required: true
+      schema:
+        type: string
+
+  responses:
+    Response400:
+      description: "Bad request"
+      headers:
+        Content-Language:
+          $ref: "#/components/headers/Content-Language"
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    Response401:
+      description: "Unauthorized"
+      headers:
+        Content-Language:
+          $ref: "#/components/headers/Content-Language"
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    Response403:
+      description: "Forbidden"
+      headers:
+        Content-Language:
+          $ref: "#/components/headers/Content-Language"
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    Response404:
+      description: "Not found"
+      headers:
+        Content-Language:
+          $ref: "#/components/headers/Content-Language"
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    Response409:
+      description: "Conflict"
+      headers:
+        Content-Language:
+          $ref: "#/components/headers/Content-Language"
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    Response429:
+      description: "Too many requests"
+      headers:
+        Content-Language:
+          $ref: "#/components/headers/Content-Language"
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+    Response500:
+      description: "Internal server error"
+      headers:
+        Content-Language:
+          $ref: "#/components/headers/Content-Language"
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: 'API key or aborts with Unauthorized'
+    authorizer:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Token JWT para el consumo del API.'
+      x-amazon-apigateway-authtype: custom
+      x-amazon-apigateway-authorizer:
+        type: token
+        identitySource: v1
+        authorizerUri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${LambdaAuthorizer}:production/invocations
+        authorizerResultTtlInSeconds: 3600
+        identityValidationExpression: ^Bearer [-0-9a-zA-z\.]*$

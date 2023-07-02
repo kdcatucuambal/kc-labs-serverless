@@ -30,7 +30,7 @@ Parameters:
 
 
 Resources:
-  LambdasInfraestructure:
+  LambdasInfrastructure:
     Type: AWS::Serverless::Application
     Properties:
       Location: kc-labs-app/labs-template.yaml

@@ -119,6 +119,8 @@ Resources:
       ApiStages:
         - ApiId: !GetAtt BalancesLambdas.Outputs.ApiId
           Stage: !GetAtt BalancesLambdas.Outputs.ApiStage
+        - ApiId: !GetAtt ProductsLambdas.Outputs.ApiId
+          Stage: !GetAtt ProductsLambdas.Outputs.ApiStageBeta
 
   LabsApiKey:
     Type: AWS::ApiGateway::ApiKey
@@ -154,6 +156,30 @@ Resources:
         ApiGatewayResponseMessage409: !Ref ApiGatewayResponseMessage409
         ApiGatewayResponseMessage429: !Ref ApiGatewayResponseMessage429
         ApiGatewayResponseMessage500: !Ref ApiGatewayResponseMessage500
+
+  ProductsLambdas:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location: labs-products-template.yaml
+      Parameters:
+        EnvironmentId: !Ref EnvironmentId
+        LambdaAliasProduction: !Ref LambdaAliasProduction
+        LambdaAliasBeta: !Ref LambdaAliasBeta
+        LogRetentionInDays: !Ref LogRetentionInDays
+        LambdaAuthorizer: !Ref LambdaAuthorizer
+        ProvisionedConcurrencyConfigEnabled: !Ref ProvisionedConcurrencyConfigEnabled
+        LabsRoleArn: !GetAtt LabsRole.Arn
+        LabsLayer: !Ref LabsLayer
+        ApiGatewayResponseMessage400: !Ref ApiGatewayResponseMessage400
+        ApiGatewayResponseMessage401: !Ref ApiGatewayResponseMessage401
+        ApiGatewayResponseMessage403: !Ref ApiGatewayResponseMessage403
+        ApiGatewayResponseMessage404: !Ref ApiGatewayResponseMessage404
+        ApiGatewayResponseMessage405: !Ref ApiGatewayResponseMessage405
+        ApiGatewayResponseMessage409: !Ref ApiGatewayResponseMessage409
+        ApiGatewayResponseMessage429: !Ref ApiGatewayResponseMessage429
+        ApiGatewayResponseMessage500: !Ref ApiGatewayResponseMessage500
+
+
 Outputs:
   LabsLayer:
     Description: "Labs Layer ARN"

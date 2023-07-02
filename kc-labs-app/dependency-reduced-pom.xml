@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>kc-labs-app</groupId>
   <artifactId>kc-labs-app</artifactId>
-  <name>A sample Hello World created for SAM CLI.</name>
+  <name>kc-labs-app</name>
   <version>1.0</version>
   <build>
     <plugins>
