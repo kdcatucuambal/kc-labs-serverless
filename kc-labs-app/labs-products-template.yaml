@@ -133,6 +133,7 @@ Globals:
 
 Resources:
   LabsApiGateway:
+    Type: AWS::Serverless::Api
     Properties:
       AccessLogSetting:
         DestinationArn: !GetAtt LabsApiGatewayLogGroup.Arn
