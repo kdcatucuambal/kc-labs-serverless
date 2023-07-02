@@ -120,7 +120,7 @@ Resources:
         - ApiId: !GetAtt BalancesLambdas.Outputs.ApiId
           Stage: !GetAtt BalancesLambdas.Outputs.ApiStage
         - ApiId: !GetAtt ProductsLambdas.Outputs.ApiId
-          Stage: !GetAtt ProductsLambdas.Outputs.ApiStageBeta
+          Stage: !GetAtt ProductsLambdas.Outputs.ApiStage
 
   LabsApiKey:
     Type: AWS::ApiGateway::ApiKey
