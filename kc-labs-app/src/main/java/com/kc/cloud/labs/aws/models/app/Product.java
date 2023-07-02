@@ -19,7 +19,7 @@ public class Product {
     private BigDecimal price;
     private String image;
     private Integer stock;
-    private Boolean isAvailable;
+    private Boolean available;
 
     @DynamoDbPartitionKey
     public String getId() {
@@ -79,10 +79,10 @@ public class Product {
     }
 
     public Boolean getAvailable() {
-        return isAvailable;
+        return available;
     }
 
     public void setAvailable(Boolean available) {
-        isAvailable = available;
+        this.available = available;
     }
 }

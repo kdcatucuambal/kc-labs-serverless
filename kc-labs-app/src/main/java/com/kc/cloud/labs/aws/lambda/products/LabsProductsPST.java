@@ -26,7 +26,7 @@ public class LabsProductsPST implements RequestStreamHandler {
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
         String request = KcUtil.convertInputStreamToString(inputStream);
         logger.info("Request: " + request);
-        RequestObject<Product> requestObject =  KcUtil.deserializeObject(request, new TypeReference<RequestObject<Product>>() {});
+        RequestObject<Product> requestObject =  KcUtil.deserializeObject(request, new TypeReference<>() {});
         boolean isSaved = productService.saveOrUpdate(requestObject.getBody());
         String jsonResponse = KcUtil.serializeObject(getResponse(isSaved));
         logger.info("Response json: " + jsonResponse);

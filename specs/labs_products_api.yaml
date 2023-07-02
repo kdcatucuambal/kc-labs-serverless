@@ -240,7 +240,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
+                type: boolean
 
         400:
           $ref: '#/components/responses/Response400'
@@ -602,9 +602,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Product'
+                type: boolean
 
         400:
           $ref: '#/components/responses/Response400'
@@ -660,7 +658,7 @@ paths:
             }
         responses:
           default:
-            statusCode: 200
+            statusCode: 201
             responseParameters:
               method.response.header.Access-Control-Allow-Headers: '''*'''
               method.response.header.Access-Control-Allow-Methods: '''*'''
@@ -773,7 +771,7 @@ components:
         stock:
           type: number
           description: "The product stock"
-        isAvailable:
+        available:
           type: boolean
           description: "The product availability"
 
