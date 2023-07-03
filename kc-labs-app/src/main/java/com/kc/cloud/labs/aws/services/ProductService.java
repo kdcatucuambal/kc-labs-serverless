@@ -23,7 +23,6 @@ public class ProductService {
         for (Product product : products) {
             productList.add(product);
         }
-
         return productList;
     }
 
