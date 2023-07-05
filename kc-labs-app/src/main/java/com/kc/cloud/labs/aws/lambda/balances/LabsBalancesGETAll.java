@@ -8,10 +8,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kc.cloud.labs.aws.models.app.Balance;
 import com.kc.cloud.labs.aws.models.app.Response;
+import com.kc.cloud.labs.aws.models.app.User;
 import com.kc.cloud.labs.aws.services.BalanceService;
+import com.kc.cloud.labs.aws.utils.SecretManagerUtil;
+import com.kc.cloud.labs.aws.utils.UserDao;
 
 import java.io.*;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -29,6 +33,17 @@ public class LabsBalancesGETAll implements RequestStreamHandler {
         String request = this.getRequestInput(inputStream);
         logger.info("Request: " + request);
         List<Balance> balances = this.balanceService.getAllBalances();
+
+        logger.info("Hibernate test:");
+        long startTime = System.currentTimeMillis();
+        Map<String, String> secretMap = SecretManagerUtil.getValue("dev1/credentials/database");
+        UserDao userDao = new UserDao(secretMap.get("username"), secretMap.get("password"), secretMap.get("url"));
+        List<User> users = userDao.getAll();
+        users.forEach(System.out::println);
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
+        System.out.println("Tiempo de ejecución: " + executionTime + " milisegundos");
+
         String jsonResponse = this.mapper.writeValueAsString(this.getResponse(balances));
         logger.info("Response: " + jsonResponse);
         outputStream.write(jsonResponse.getBytes());

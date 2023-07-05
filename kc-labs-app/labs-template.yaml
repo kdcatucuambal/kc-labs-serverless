@@ -110,6 +110,7 @@ Resources:
                   - "xray:GetSamplingTargets"
                   - "xray:GetSamplingStatisticSummaries"
                   - "dynamodb:*"
+                  - "secretsmanager:GetSecretValue"
                 Resource: "*"
 
   LabsUsagePlan:

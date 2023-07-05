@@ -9,10 +9,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kc.cloud.labs.aws.models.app.Balance;
 import com.kc.cloud.labs.aws.models.app.CustomResponse;
 import com.kc.cloud.labs.aws.models.app.Response;
+import com.kc.cloud.labs.aws.models.app.UserSample;
 import com.kc.cloud.labs.aws.services.BalanceService;
+import com.kc.cloud.labs.aws.utils.SecretManagerUtil;
+import com.kc.cloud.labs.aws.utils.SqlSampleClient;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -37,12 +42,19 @@ public class LabsBalancesGETById implements RequestStreamHandler {
         logger.info("Info requestMap: " + requestMap.toString());
         Map<String, Object> getbody = (Map<String, Object>)requestMap.get("getbody");
         Map<String, String> params = (Map<String, String>)getbody.get("params");
-
         String balanceId = params.get("id");
-
         logger.info("Info balanceId: " + balanceId);
-
         Balance balanceFound = this.balanceService.getBalanceByCode(balanceId);
+
+        logger.info("Simpe sql client test: ");
+        long startTime = System.currentTimeMillis();
+        Map<String, String> secretMap = SecretManagerUtil.getValue("dev1/credentials/database");
+        List<UserSample> users = SqlSampleClient.getAll(secretMap.get("url"), secretMap.get("username"), secretMap.get("password"));
+        users.forEach(System.out::println);
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
+        System.out.println("Tiempo de ejecución: " + executionTime + " milisegundos");
+
         String jsonResponse = this.mapper.writeValueAsString(this.getResponse(balanceFound));
         logger.info("Response: " + jsonResponse);
         output.write(jsonResponse.getBytes(StandardCharsets.UTF_8));
