@@ -39,13 +39,6 @@ public class LabsBalancesGETById implements RequestStreamHandler {
         String balanceId = params.get("id");
         logger.info("Info balanceId: " + balanceId);
         BalanceV2 balanceFound = this.balanceV2Dao.findById(balanceId);
-
-        logger.info("Simpe sql client test: ");
-        long startTime = System.currentTimeMillis();
-        long endTime = System.currentTimeMillis();
-        long executionTime = endTime - startTime;
-        System.out.println("Tiempo de ejecución: " + executionTime + " milisegundos");
-
         String jsonResponse = this.mapper.writeValueAsString(this.getResponse(balanceFound));
         logger.info("Response: " + jsonResponse);
         output.write(jsonResponse.getBytes(StandardCharsets.UTF_8));

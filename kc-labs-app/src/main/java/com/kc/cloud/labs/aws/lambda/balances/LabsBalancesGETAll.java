@@ -12,14 +12,12 @@ import com.kc.cloud.labs.aws.utils.BalanceV2Dao;
 
 import java.io.*;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class LabsBalancesGETAll implements RequestStreamHandler {
 
     private static final Logger logger = Logger.getLogger(LabsBalancesGETAll.class.getName());
-    private final BalanceService balanceService = new BalanceService();
 
     private final ObjectMapper mapper = new ObjectMapper();
 
