@@ -2,16 +2,13 @@ package com.kc.cloud.labs.aws.lambda.balances;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
-import com.amazonaws.xray.AWSXRay;
-import com.amazonaws.xray.entities.Subsegment;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kc.cloud.labs.aws.models.app.Balance;
+import com.kc.cloud.labs.aws.models.app.BalanceV2;
 import com.kc.cloud.labs.aws.models.app.Response;
-import com.kc.cloud.labs.aws.models.app.User;
 import com.kc.cloud.labs.aws.services.BalanceService;
-import com.kc.cloud.labs.aws.utils.SecretManagerUtil;
-import com.kc.cloud.labs.aws.utils.UserDao;
+import com.kc.cloud.labs.aws.utils.BalanceV2Dao;
+
 
 import java.io.*;
 import java.util.List;
@@ -26,31 +23,22 @@ public class LabsBalancesGETAll implements RequestStreamHandler {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
+    private final BalanceV2Dao balanceV2Dao = new BalanceV2Dao();
+
 
     @Override
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
         logger.info("Invoking lambda: LabsBalancesGETAll");
         String request = this.getRequestInput(inputStream);
         logger.info("Request: " + request);
-        List<Balance> balances = this.balanceService.getAllBalances();
-
-        logger.info("Hibernate test:");
-        long startTime = System.currentTimeMillis();
-        Map<String, String> secretMap = SecretManagerUtil.getValue("dev1/credentials/database");
-        UserDao userDao = new UserDao(secretMap.get("username"), secretMap.get("password"), secretMap.get("url"));
-        List<User> users = userDao.getAll();
-        users.forEach(System.out::println);
-        long endTime = System.currentTimeMillis();
-        long executionTime = endTime - startTime;
-        System.out.println("Tiempo de ejecución: " + executionTime + " milisegundos");
-
+        List<BalanceV2> balances = this.balanceV2Dao.findAll();
         String jsonResponse = this.mapper.writeValueAsString(this.getResponse(balances));
         logger.info("Response: " + jsonResponse);
         outputStream.write(jsonResponse.getBytes());
     }
 
-    public Response<List<Balance>> getResponse(List<Balance> balances) throws JsonProcessingException {
-        Response<List<Balance>> response = new Response<>();
+    public Response<List<BalanceV2>> getResponse(List<BalanceV2> balances) throws JsonProcessingException {
+        Response<List<BalanceV2>> response = new Response<>();
         response.setStatusCode(200);
         response.setBody(balances);
         return response;

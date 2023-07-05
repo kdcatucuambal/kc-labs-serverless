@@ -11,6 +11,17 @@ public class UserSample {
 
     private Integer age;
 
+    public UserSample() {
+    }
+
+    public UserSample(Integer id, String name, String salary, Boolean active, Integer age) {
+        this.id = id;
+        this.name = name;
+        this.salary = salary;
+        this.active = active;
+        this.age = age;
+    }
+
     public Integer getId() {
         return id;
     }

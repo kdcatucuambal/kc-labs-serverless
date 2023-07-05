@@ -79,7 +79,7 @@ Globals:
     Timeout: 20
     Tracing: Active
     Runtime: java11
-    MemorySize: 512
+    MemorySize: 768
     Architectures:
       - x86_64
     Environment:

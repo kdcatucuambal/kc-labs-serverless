@@ -58,7 +58,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Balance'
+                $ref: '#/components/schemas/BalanceV2'
                 
         400:
           $ref: '#/components/responses/Response400'
@@ -251,7 +251,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Balance'
+                  $ref: '#/components/schemas/BalanceV2'
                 
         400:
           $ref: '#/components/responses/Response400'
@@ -412,7 +412,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BalanceDto'
+              $ref: '#/components/schemas/BalanceV2'
 
       responses:
         201:
@@ -434,7 +434,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Balance'
+                $ref: '#/components/schemas/BalanceV2'
                   
                 
         400:
@@ -614,6 +614,29 @@ paths:
   
 components:
   schemas:
+    BalanceV2:
+      type: object
+      description: The balance object
+      properties:
+        id: 
+          type: number
+          description: The id
+        code:
+          type: string
+          description: The code
+        user:
+          type: string
+          description: The user
+        average: 
+          type: number
+          description: The average
+        current:
+          type: number
+          description: The current
+        active:
+          type: boolean
+          description: The active
+
     Balance:
       type: object
       description: The balance object

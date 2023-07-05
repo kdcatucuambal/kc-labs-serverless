@@ -2,22 +2,16 @@ package com.kc.cloud.labs.aws.lambda.balances;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
-import com.amazonaws.xray.AWSXRay;
-import com.amazonaws.xray.entities.Subsegment;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kc.cloud.labs.aws.models.app.Balance;
-import com.kc.cloud.labs.aws.models.app.CustomResponse;
+import com.kc.cloud.labs.aws.models.app.BalanceV2;
 import com.kc.cloud.labs.aws.models.app.Response;
-import com.kc.cloud.labs.aws.models.app.UserSample;
-import com.kc.cloud.labs.aws.services.BalanceService;
-import com.kc.cloud.labs.aws.utils.SecretManagerUtil;
-import com.kc.cloud.labs.aws.utils.SqlSampleClient;
+import com.kc.cloud.labs.aws.utils.BalanceV2Dao;
+
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -26,11 +20,11 @@ import java.util.stream.Collectors;
 public class LabsBalancesGETById implements RequestStreamHandler {
 
     private static final Logger logger = Logger.getLogger(LabsBalancesGETById.class.getName());
-    private final BalanceService balanceService;
+    private final BalanceV2Dao balanceV2Dao = new BalanceV2Dao();
     private final ObjectMapper mapper = new ObjectMapper();
     public LabsBalancesGETById() {
         logger.info("LabsBalancesGETById constructor");
-        this.balanceService = new BalanceService();
+
     }
 
     @Override
@@ -44,13 +38,10 @@ public class LabsBalancesGETById implements RequestStreamHandler {
         Map<String, String> params = (Map<String, String>)getbody.get("params");
         String balanceId = params.get("id");
         logger.info("Info balanceId: " + balanceId);
-        Balance balanceFound = this.balanceService.getBalanceByCode(balanceId);
+        BalanceV2 balanceFound = this.balanceV2Dao.findById(balanceId);
 
         logger.info("Simpe sql client test: ");
         long startTime = System.currentTimeMillis();
-        Map<String, String> secretMap = SecretManagerUtil.getValue("dev1/credentials/database");
-        List<UserSample> users = SqlSampleClient.getAll(secretMap.get("url"), secretMap.get("username"), secretMap.get("password"));
-        users.forEach(System.out::println);
         long endTime = System.currentTimeMillis();
         long executionTime = endTime - startTime;
         System.out.println("Tiempo de ejecución: " + executionTime + " milisegundos");
@@ -60,8 +51,8 @@ public class LabsBalancesGETById implements RequestStreamHandler {
         output.write(jsonResponse.getBytes(StandardCharsets.UTF_8));
     }
 
-    public Response<Balance> getResponse(Balance balance) {
-        Response<Balance> response = new Response<>();
+    public Response<BalanceV2> getResponse(BalanceV2 balance) {
+        Response<BalanceV2> response = new Response<>();
         response.setStatusCode(200);
         response.setBody(balance);
         return response;
