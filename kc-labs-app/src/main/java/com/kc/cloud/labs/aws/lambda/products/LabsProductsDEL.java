@@ -6,7 +6,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.kc.cloud.labs.aws.models.app.Response;
 import com.kc.cloud.labs.aws.models.request.RequestObject;
 import com.kc.cloud.labs.aws.services.ProductService;
-import com.kc.cloud.labs.aws.utils.KcUtil;
+import com.kc.cloud.util.ConvertDataUtil;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +16,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 public class LabsProductsDEL implements RequestStreamHandler {
-    Logger logger = Logger.getLogger(LabsProductsGETById.class.getName());
+    Logger logger = Logger.getLogger(LabsProductsDEL.class.getName());
     private final ProductService productService;
 
     public LabsProductsDEL() {
@@ -24,12 +25,12 @@ public class LabsProductsDEL implements RequestStreamHandler {
     }
     @Override
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
-        String request = KcUtil.convertInputStreamToString(inputStream);
+        String request = ConvertDataUtil.convertInputStreamToString(inputStream);
         logger.info("Request: " + request);
-        RequestObject<?> requestObject =  KcUtil.deserializeObject(request, new TypeReference<>() {});
+        RequestObject<?> requestObject =  ConvertDataUtil.deserializeObject(request, new TypeReference<>() {});
         Map<String, String> params = requestObject.getGetbody().getParams();
         productService.deleteById(params.get("id"));
-        String jsonResponse = KcUtil.serializeObject(getResponse(true));
+        String jsonResponse = ConvertDataUtil.serializeObject(getResponse(true));
         logger.info("Response json: " + jsonResponse);
         outputStream.write(jsonResponse.getBytes());
     }

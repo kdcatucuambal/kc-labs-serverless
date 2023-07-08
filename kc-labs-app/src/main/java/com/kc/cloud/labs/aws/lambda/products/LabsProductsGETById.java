@@ -7,7 +7,7 @@ import com.kc.cloud.labs.aws.models.app.Product;
 import com.kc.cloud.labs.aws.models.app.Response;
 import com.kc.cloud.labs.aws.models.request.RequestObject;
 import com.kc.cloud.labs.aws.services.ProductService;
-import com.kc.cloud.labs.aws.utils.KcUtil;
+import com.kc.cloud.util.ConvertDataUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,12 +27,12 @@ public class LabsProductsGETById implements RequestStreamHandler {
 
     @Override
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
-        String request = KcUtil.convertInputStreamToString(inputStream);
+        String request = ConvertDataUtil.convertInputStreamToString(inputStream);
         logger.info("Request: " + request);
-        RequestObject<?> requestObject =  KcUtil.deserializeObject(request, new TypeReference<>() {});
+        RequestObject<?> requestObject =  ConvertDataUtil.deserializeObject(request, new TypeReference<>() {});
         Map<String, String> params = requestObject.getGetbody().getParams();
         Product productFound = productService.getById(params.get("id"));
-        String jsonResponse = KcUtil.serializeObject(getResponse(productFound));
+        String jsonResponse = ConvertDataUtil.serializeObject(getResponse(productFound));
         logger.info("Response json: " + jsonResponse);
 
         outputStream.write(jsonResponse.getBytes());

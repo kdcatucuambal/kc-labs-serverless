@@ -1,5 +1,6 @@
 package com.kc.cloud.labs.aws.exceptions;
 
+
 public class LabServerlessException extends Exception {
 
     private static final long serialVersionUID = 1L;

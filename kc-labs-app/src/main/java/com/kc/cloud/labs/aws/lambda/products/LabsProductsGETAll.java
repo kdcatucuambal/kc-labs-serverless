@@ -2,11 +2,10 @@ package com.kc.cloud.labs.aws.lambda.products;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kc.cloud.labs.aws.models.app.Product;
 import com.kc.cloud.labs.aws.models.app.Response;
 import com.kc.cloud.labs.aws.services.ProductService;
-import com.kc.cloud.labs.aws.utils.KcUtil;
+import com.kc.cloud.util.ConvertDataUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +28,7 @@ public class LabsProductsGETAll implements RequestStreamHandler {
         logger.info("Invoking lambda: LabsProductsGETAll");
         Response<List<Product>> responseObject = getResponse(productService.getAll());
         logger.info("Response Object: " + responseObject);
-        String jsonResponse = KcUtil.serializeObject(responseObject);
+        String jsonResponse = ConvertDataUtil.serializeObject(responseObject);
         logger.info("Response: " + jsonResponse);
         outputStream.write(jsonResponse.getBytes());
     }

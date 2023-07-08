@@ -7,26 +7,29 @@ import com.kc.cloud.labs.aws.models.app.BalanceV2;
 import com.kc.cloud.labs.aws.models.app.Response;
 import com.kc.cloud.labs.aws.models.request.RequestObject;
 import com.kc.cloud.labs.aws.utils.BalanceV2Dao;
-import com.kc.cloud.labs.aws.utils.KcUtil;
+import com.kc.cloud.util.ConvertDataUtil;
 
 import java.io.*;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class LabsBalancesPST implements RequestStreamHandler {
 
     private static final Logger logger = Logger.getLogger(LabsBalancesPST.class.getName());
     private final BalanceV2Dao balanceV2Dao = new BalanceV2Dao();
 
+    public LabsBalancesPST() {
+        logger.info("Initializing lambda: LabsBalancesPST");
+    }
+
     @Override
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
         logger.info("Invoking lambda: LabsBalancesPST");
-        String jsonRequest = KcUtil.convertInputStreamToString(inputStream);
+        String jsonRequest = ConvertDataUtil.convertInputStreamToString(inputStream);
         logger.info("Request: " + jsonRequest);
-        RequestObject<BalanceV2> requestObject = KcUtil.deserializeObject(jsonRequest, new TypeReference<RequestObject<BalanceV2>>() {});
+        RequestObject<BalanceV2> requestObject = ConvertDataUtil.deserializeObject(jsonRequest, new TypeReference<RequestObject<BalanceV2>>() {});
         boolean balanceCreated = balanceV2Dao.save(requestObject.getBody());
         logger.info("Balance created: " + balanceCreated);
-        String jsonResponse = KcUtil.serializeObject(this.getResponse(requestObject.getBody()));
+        String jsonResponse = ConvertDataUtil.serializeObject(this.getResponse(requestObject.getBody()));
         logger.info("Response: " + jsonResponse);
         outputStream.write(jsonResponse.getBytes());
     }
