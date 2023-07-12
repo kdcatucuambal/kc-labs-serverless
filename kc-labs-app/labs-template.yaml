@@ -113,6 +113,7 @@ Resources:
                   - "secretsmanager:GetSecretValue"
                   - "apigateway:GetApiKeys"
                   - "apigateway:GetApiKey"
+                  - "apigateway:GET"
                 Resource: "*"
 
   LabsUsagePlan:
