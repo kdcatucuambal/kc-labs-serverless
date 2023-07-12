@@ -1,5 +1,6 @@
 package com.kc.cloud.labs.aws.utils;
 
+import com.kc.cloud.api.SecretManagerUtil;
 import com.kc.cloud.labs.aws.models.app.UserSample;
 
 import java.lang.reflect.Field;

@@ -111,6 +111,8 @@ Resources:
                   - "xray:GetSamplingStatisticSummaries"
                   - "dynamodb:*"
                   - "secretsmanager:GetSecretValue"
+                  - "apigateway:GetApiKeys"
+                  - "apigateway:GetApiKey"
                 Resource: "*"
 
   LabsUsagePlan:

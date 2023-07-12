@@ -3,32 +3,26 @@ package com.kc.cloud.labs.aws.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kc.cloud.api.ApiGatewayUtil;
+import com.kc.cloud.labs.aws.lambda.products.LabsProductsGETAll;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class KcUtil {
-
-    private static final ObjectMapper mapper = new ObjectMapper();
-
-    public static String convertInputStreamToString(InputStream inputStream)  {
-        return new BufferedReader(new InputStreamReader(inputStream))
-                .lines().collect(Collectors.joining(System.lineSeparator()));
-    }
-
-    public static String serializeObject(Object object) throws JsonProcessingException {
-        return mapper.writeValueAsString(object);
-    }
-
-    public static <T> T deserializeObject(String json, Class<T> clazz) throws IOException {
-        return mapper.readValue(json, clazz);
-    }
-
-    public static <T> T deserializeObject(String json, TypeReference<T> typeReference) throws IOException {
-        return mapper.readValue(json, typeReference);
+    private final static Logger logger = Logger.getLogger(KcUtil.class.getName());
+    private final static ApiGatewayUtil apiGatewayUtil = new ApiGatewayUtil();
+    public static String getAiKeyValue(){
+        logger.info("ApiGateway Client Ref: " + apiGatewayUtil);
+        String apiKeyId = System.getenv("API_KEY_ID");
+        logger.info("API Key Id: " + apiKeyId);
+        String apiKey = apiGatewayUtil.getApiKeyWithId(apiKeyId);
+        logger.info("API Key Value: " + apiKey);
+        return apiKey;
     }
 
 }

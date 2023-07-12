@@ -1,7 +1,7 @@
 package com.kc.cloud.labs.aws.services;
 
+import com.kc.cloud.api.DynamoDb;
 import com.kc.cloud.labs.aws.models.app.Product;
-import com.kc.cloud.labs.aws.utils.DynamoDb;
 import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
