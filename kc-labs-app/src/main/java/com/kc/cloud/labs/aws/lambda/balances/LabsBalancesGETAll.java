@@ -35,6 +35,4 @@ public class LabsBalancesGETAll implements RequestStreamHandler {
         response.setBody(balances);
         return response;
     }
-
-
 }
