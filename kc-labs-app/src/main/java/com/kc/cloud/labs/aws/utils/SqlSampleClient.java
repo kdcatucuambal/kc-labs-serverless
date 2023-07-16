@@ -24,7 +24,7 @@ public class SqlSampleClient {
         }
     }
 
-    public static boolean executeSql(String sql){
+    public static boolean executeSql(String sql) {
         String secretId = "dev1/credentials/database";
         Map<String, String> secterMap = SecretManagerUtil.getValue(secretId);
         try (Connection conn = DriverManager.getConnection(secterMap.get("url"), secterMap.get("username"), secterMap.get("password"))) {
@@ -37,47 +37,47 @@ public class SqlSampleClient {
         }
     }
 
-    public static <T> List<T> findAll(String tableName, String prefix, Class<T> clazz){
+    public static <T> List<T> findAll(String tableName, String prefix, Class<T> clazz) {
         String sql = getAllSql(tableName);
         ResultSet resultSet = getResultSet(sql);
         return getAllObjectsFromResultSet(clazz, prefix, resultSet);
     }
 
-    public static <T> T findOne(String tableName, String prefix, String id, Class<T> clazz){
+    public static <T> T findOne(String tableName, String prefix, String id, Class<T> clazz) {
         String sql = getOneSql(tableName, prefix, id);
         ResultSet resultSet = getResultSet(sql);
         List<T> objs = getAllObjectsFromResultSet(clazz, prefix, resultSet);
         return objs.get(0);
     }
 
-    public static boolean deleteOne(String tableName, String prefix, String id){
+    public static boolean deleteOne(String tableName, String prefix, String id) {
         String sql = deleteSql(tableName, prefix, id);
         return executeSql(sql);
     }
 
-    public static <T>boolean save(T object, String tableName, String prefix){
+    public static <T> boolean save(T object, String tableName, String prefix) {
         String sql = insertIntoSql(object, tableName, prefix);
         return executeSql(sql);
     }
 
-    public static <T> boolean update(T object, String tableName, String prefix){
+    public static <T> boolean update(T object, String tableName, String prefix) {
         String sql = updateSql(object, tableName, prefix);
         return executeSql(sql);
     }
 
-    public static String getAllSql(String tableName){
+    public static String getAllSql(String tableName) {
         return "SELECT * FROM " + tableName;
     }
 
-    public static String getOneSql(String tableName, String prefix, String id){
+    public static String getOneSql(String tableName, String prefix, String id) {
         return "SELECT * FROM " + tableName + " WHERE " + prefix + "_id = " + id;
     }
 
-    public static String deleteSql(String tableName, String prefix, String id){
+    public static String deleteSql(String tableName, String prefix, String id) {
         return "DELETE FROM " + tableName + " WHERE " + prefix + "_id = " + id;
     }
 
-    public static <T> String insertIntoSql(T object, String tableName, String prefix){
+    public static <T> String insertIntoSql(T object, String tableName, String prefix) {
         Class<?> clazz = object.getClass();
         Field[] fields = clazz.getDeclaredFields();
         StringBuilder sql = new StringBuilder("INSERT INTO " + tableName + " (");
@@ -86,7 +86,7 @@ public class SqlSampleClient {
             for (Field field : fields) {
                 if (field.getName().equals("id")) continue;
                 field.setAccessible(true);
-                sql.append(prefix).append("_").append(field.getName()).append(", ");
+                sql.append(prefix).append("_").append(getAttributeName(field.getName())).append(", ");
                 values.append("'").append(field.get(object)).append("', ");
             }
         } catch (Exception e) {
@@ -99,7 +99,7 @@ public class SqlSampleClient {
         return sql.append(values).toString();
     }
 
-    public static <T> String updateSql(T object, String tableName, String prefix){
+    public static <T> String updateSql(T object, String tableName, String prefix) {
         Class<?> clazz = object.getClass();
         Field[] fields = clazz.getDeclaredFields();
         StringBuilder sql = new StringBuilder("UPDATE " + tableName + " SET ");
@@ -107,7 +107,7 @@ public class SqlSampleClient {
             for (Field field : fields) {
                 if (field.getName().equals("id")) continue;
                 field.setAccessible(true);
-                sql.append(prefix).append("_").append(field.getName()).append(" = '").append(field.get(object)).append("', ");
+                sql.append(prefix).append("_").append(getAttributeName(field.getName())).append(" = '").append(field.get(object)).append("', ");
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -127,7 +127,7 @@ public class SqlSampleClient {
                 Field[] fields = clazz.getDeclaredFields();
                 for (Field field : fields) {
                     field.setAccessible(true);
-                    field.set(obj, resultSet.getObject(prefix +"_"+ field.getName()));
+                    field.set(obj, resultSet.getObject(prefix + "_" + getAttributeName(field.getName())));
                 }
                 objects.add(obj);
             }
@@ -137,5 +137,16 @@ public class SqlSampleClient {
         return objects;
     }
 
-
+    private static String getAttributeName(String fieldName) {
+        String[] split = fieldName.split("(?=\\p{Upper})");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < split.length; i++) {
+            if (i == split.length - 1) {
+                sb.append(split[i].toLowerCase());
+            } else {
+                sb.append(split[i].toLowerCase()).append("_");
+            }
+        }
+        return sb.toString();
+    }
 }

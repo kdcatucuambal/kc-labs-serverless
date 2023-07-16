@@ -58,7 +58,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BalanceV2'
+                $ref: '#/components/schemas/Balance'
                 
         400:
           $ref: '#/components/responses/Response400'
@@ -251,7 +251,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/BalanceV2'
+                  $ref: '#/components/schemas/Balance'
                 
         400:
           $ref: '#/components/responses/Response400'
@@ -412,7 +412,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BalanceV2'
+              $ref: '#/components/schemas/Balance'
 
       responses:
         201:
@@ -434,7 +434,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BalanceV2'
+                $ref: '#/components/schemas/Balance'
                   
                 
         400:
@@ -614,7 +614,7 @@ paths:
   
 components:
   schemas:
-    BalanceV2:
+    Balance:
       type: object
       description: The balance object
       properties:
@@ -636,56 +636,12 @@ components:
         active:
           type: boolean
           description: The active
+        cuttofDate:
+          type: string
+          description: The cuttofDate
+          format: date
 
-    Balance:
-      type: object
-      description: The balance object
-      properties:
-        code:
-          type: string
-          description: The code
-        username:
-          type: string
-          description: The username
-        average: 
-          type: number
-          description: The average
-        current:
-          type: number
-          description: The current
-        records:
-          type: array
-          description: The records
-          items:
-            $ref: '#/components/schemas/Record'
 
-    BalanceDto:
-      allOf:
-        - $ref: '#/components/schemas/Balance'
-        - type: object
-          properties:
-            records:
-              not: {}
-          required:
-            - code
-            - username
-            - average
-            - current
-
-    Record:
-      type: object
-      description: The record object
-      properties:
-        date: 
-          type: number
-          description: The date
-          format: int64
-        description:
-          type: string
-          description: The description
-        type:
-          type: string
-          description: The type
     
     ErrorResponse:
       type: object
@@ -694,85 +650,8 @@ components:
           type: string
           description: "The error message"
 
-    Test:
-      type: object
-      required:
-        - values
-      properties:
-        idCustomer:
-          type:
-            - string
-            - "null"
-        values:
-          type: object
-          additionalProperties: true
 
-    RuleExecutePUTRq:
-        description: "Cuerpo de petición para ejecutar la api de reglas acepta nulls"
-        type: object
-        allOf:
-          - $ref: "#/components/schemas/RuleExecuteBody"
-          - type: object
-        properties:
-          idCustomer:
-            nullable: true
-          idCard:
-            oneOf:
-              - type: string
-              - type: "null"
-            nullable: true
-          idRol:
-            nullable: true
-          # ruleRequest:
-          #   type: array
-          #   items:
-          #     allOf:
-          #       - $ref: "#/components/schemas/RuleRequest"
-          #       - type: object
-          #     properties:
-          #       version:
-          #         nullable: true
-          #       acronym:
-          #         nullable: true
-          #       values:
-          #         nullable: true
-    
-    RuleExecuteBody:
-      description: "Cuerpo de petición para ejecutar la api de reglas"
-      type: object
-      properties:
-        idCustomer:
-          type: integer
-          format: int64
-          description: "Identificador del cliente"
-          nullable: true
-        idCard:
-          type: string
-          description: "Identificador de la tarjeta"
-          nullable: true
-        idRol:
-          type: integer
-          format: int64
-          description: "Identificador del rol"
-          nullable: true
-        # ruleRequest:
-        #   type: array
-        #   nullable: true
-        #   items:
-        #     $ref: "#/components/schemas/RuleRequest"
 
-    RuleRequest:
-      type: object
-      properties:
-        version:
-          type: integer
-          nullable: true
-        acronym:
-          type: string
-          nullable: true
-        values:
-          type: object
-          additionalProperties: true
 
   headers:
     Content-Language:

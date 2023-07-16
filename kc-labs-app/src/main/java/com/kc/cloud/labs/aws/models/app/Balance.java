@@ -1,43 +1,36 @@
 package com.kc.cloud.labs.aws.models.app;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Balance {
 
-    public String code;
-
-    public String username;
-
-    public BigDecimal average;
-
-    public BigDecimal current;
-
-    public List<Record> records;
-
-    public Balance(){}
-
-    public Balance(String code, String username, BigDecimal average, BigDecimal current, List<Record> records){
-        this.code = code;
-        this.username = username;
-        this.average = average;
-        this.current = current;
-        this.records = records;
+    private Integer id;
+    private String code;
+    private String user;
+    private String region;
+    private BigDecimal average;
+    private BigDecimal current;
+    private Boolean active;
+    private Date cuttoffDate;
+    @Override
+    public String toString() {
+        return "Balance{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", user='" + user + '\'' +
+                ", region='" + region + '\'' +
+                ", average=" + average +
+                ", current=" + current +
+                ", active=" + active +
+                ", cuttoffDate=" + cuttoffDate +
+                '}';
     }
-
-    public Balance(String code, String username, BigDecimal average, BigDecimal current){
-        this.code = code;
-        this.username = username;
-        this.average = average;
-        this.current = current;
-        this.records = new ArrayList<>();
-    }
-
-
 }

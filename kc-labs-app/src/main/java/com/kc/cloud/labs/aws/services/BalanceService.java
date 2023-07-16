@@ -1,6 +1,6 @@
 package com.kc.cloud.labs.aws.services;
 
-import com.kc.cloud.labs.aws.models.app.Balance;
+import com.kc.cloud.labs.aws.models.app.BalanceLegacy;
 import com.kc.cloud.labs.aws.models.app.Record;
 import com.kc.cloud.labs.aws.models.dtos.BalanceDto;
 
@@ -17,8 +17,8 @@ public class BalanceService {
         logger.info("BalanceService initialized!");
         logger.info(this.toString());
     }
-    public Balance getBalanceByCode(String code){
-        Balance balance = new Balance();
+    public BalanceLegacy getBalanceByCode(String code){
+        BalanceLegacy balance = new BalanceLegacy();
         balance.setCode(code);
         balance.setCurrent(new BigDecimal("448.26"));
         balance.setAverage(new BigDecimal("800.50"));
@@ -31,8 +31,8 @@ public class BalanceService {
         return balance;
     }
 
-    public List<Balance> getAllBalances(){
-        List<Balance> balances = new ArrayList<>();
+    public List<BalanceLegacy> getAllBalances(){
+        List<BalanceLegacy> balances = new ArrayList<>();
         balances.add(getBalanceByCode("AB-1050"));
         balances.add(getBalanceByCode("AB-1051"));
         balances.add(getBalanceByCode("AB-1052"));
@@ -40,9 +40,9 @@ public class BalanceService {
         return balances;
     }
 
-    public Balance saveBalance(BalanceDto balanceDto){
+    public BalanceLegacy saveBalance(BalanceDto balanceDto){
         logger.info("Saving balance DTO: " + balanceDto.toString());
-        Balance balance = new Balance();
+        BalanceLegacy balance = new BalanceLegacy();
         balance.setCode(balanceDto.getCode());
         balance.setCurrent(balanceDto.getCurrent());
         balance.setAverage(balanceDto.getAverage());
@@ -51,11 +51,11 @@ public class BalanceService {
         return balance;
     }
 
-    public void deleteBalance(Balance balance){
+    public void deleteBalance(BalanceLegacy balance){
 
     }
 
-    public void updateBalance(Balance balance){
+    public void updateBalance(BalanceLegacy balance){
 
     }
 

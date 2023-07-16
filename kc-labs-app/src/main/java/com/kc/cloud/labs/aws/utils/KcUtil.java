@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,15 @@ public class KcUtil {
         String apiKey = apiGatewayUtil.getApiKeyWithId(apiKeyId);
         logger.info("API Key Value: " + apiKey);
         return apiKey;
+    }
+
+    public static Map<String, String> getCredentialsFromEnvs(){
+        Map<String, String> secterMap = Map.of(
+                "url", System.getenv("DATABASE_URL"),
+                "username", System.getenv("DATABASE_USERNAME"),
+                "password", System.getenv("DATABASE_PASSWORD")
+        );
+        return secterMap;
     }
 
 }

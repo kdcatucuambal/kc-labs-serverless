@@ -3,9 +3,9 @@ package com.kc.cloud.labs.aws.lambda.balances;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.kc.cloud.labs.aws.models.app.BalanceV2;
+import com.kc.cloud.labs.aws.models.app.Balance;
 import com.kc.cloud.labs.aws.models.app.Response;
-import com.kc.cloud.labs.aws.utils.BalanceV2Dao;
+import com.kc.cloud.labs.aws.utils.BalanceDao;
 import com.kc.cloud.util.ConvertDataUtil;
 
 
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 public class LabsBalancesGETById implements RequestStreamHandler {
 
     private static final Logger logger = Logger.getLogger(LabsBalancesGETById.class.getName());
-    private final BalanceV2Dao balanceV2Dao = new BalanceV2Dao();
+    private final BalanceDao balanceV2Dao = new BalanceDao();
     public LabsBalancesGETById() {
         logger.info("LabsBalancesGETById constructor");
 
@@ -40,14 +40,14 @@ public class LabsBalancesGETById implements RequestStreamHandler {
 
         String balanceId = params.get("id");
         logger.info("Info balanceId: " + balanceId);
-        BalanceV2 balanceFound = this.balanceV2Dao.findById(balanceId);
+        Balance balanceFound = this.balanceV2Dao.findById(balanceId);
         String jsonResponse = ConvertDataUtil.serializeObject(this.getResponse(balanceFound));
         logger.info("Response: " + jsonResponse);
         output.write(jsonResponse.getBytes(StandardCharsets.UTF_8));
     }
 
-    public Response<BalanceV2> getResponse(BalanceV2 balance) {
-        Response<BalanceV2> response = new Response<>();
+    public Response<Balance> getResponse(Balance balance) {
+        Response<Balance> response = new Response<>();
         response.setStatusCode(200);
         response.setBody(balance);
         return response;
