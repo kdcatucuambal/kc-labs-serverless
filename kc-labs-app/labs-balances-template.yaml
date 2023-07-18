@@ -145,7 +145,7 @@ Resources:
         Fn::Transform:
           Name: AWS::Include
           Parameters:
-            Location: ../specs/labs_api.yaml
+            Location: ../specs/labs_balances_api.yaml
       MethodSettings:
         - ResourcePath: "/*"
           HttpMethod: "*"

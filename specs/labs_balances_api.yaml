@@ -17,9 +17,9 @@ x-amazon-apigateway-request-validators:
 paths:      
   /labs/balances/{id}:
     get:
-      security:
-        - api_key: []
-        - authorizer: []
+#      security:
+#        - api_key: []
+#        - authorizer: []
       x-amazon-apigateway-request-validator: all
       summary: Return a balance by id
       description: Return a balance by id
