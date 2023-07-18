@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
-  title: 
-    Fn::Sub: ${EnvironmentId}-labs-api
+  title:
+    Fn::Sub: ${EnvironmentId}-balances-labs-api
   version: 0.0.1
   description: |
     This is a sample api labs using Java
@@ -14,13 +14,13 @@ x-amazon-apigateway-request-validators:
     validateRequestBody: false
     validateRequestParameters: true
 
-paths:      
+paths:
   /labs/balances/{id}:
     get:
 #      security:
 #        - api_key: []
 #        - authorizer: []
-      x-amazon-apigateway-request-validator: all
+#      x-amazon-apigateway-request-validator: all
       summary: Return a balance by id
       description: Return a balance by id
       operationId: LabsBalancesGETById
@@ -59,7 +59,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Balance'
-                
+
         400:
           $ref: '#/components/responses/Response400'
         401:
@@ -116,7 +116,7 @@ paths:
           default:
             statusCode: 200
             responseParameters:
-              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
               method.response.header.Access-Control-Allow-Methods: '''*'''
               method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
@@ -200,6 +200,43 @@ paths:
                  #set($cause = $input.path('$.cause'))
                   $cause.errorMessage
           
+  
+
+    options:
+      summary: Balances Get By Id Options
+      description: Balances Get By Id Options
+      responses:
+        200:
+          description: Default response for CORS method
+          headers:
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: |
+            {
+              "statusCode" : 200
+            }
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |
+                {}
+
   /labs/balances:
     get:
       security:
@@ -252,7 +289,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Balance'
-                
+
         400:
           $ref: '#/components/responses/Response400'
         401:
@@ -435,8 +472,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Balance'
-                  
-                
+
+
         400:
           $ref: '#/components/responses/Response400'
         401:
@@ -576,7 +613,7 @@ paths:
                  #set($res = $input.path('$'))
                  #set($cause = $input.path('$.cause'))
                   $cause.errorMessage      
-   
+
     options:
       summary: Balances OPT
       description: Balances OPT
@@ -611,14 +648,14 @@ paths:
         passthroughBehavior: when_no_match
         type: mock
 
-  
+
 components:
   schemas:
     Balance:
       type: object
       description: The balance object
       properties:
-        id: 
+        id:
           type: number
           description: The id
         code:
@@ -627,7 +664,7 @@ components:
         user:
           type: string
           description: The user
-        average: 
+        average:
           type: number
           description: The average
         current:
