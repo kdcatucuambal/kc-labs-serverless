@@ -17,10 +17,10 @@ x-amazon-apigateway-request-validators:
 paths:
   /labs/balances/{id}:
     get:
-#      security:
-#        - api_key: []
-#        - authorizer: []
-#      x-amazon-apigateway-request-validator: all
+      security:
+        - api_key: []
+        - authorizer: []
+      x-amazon-apigateway-request-validator: all
       summary: Return a balance by id
       description: Return a balance by id
       operationId: LabsBalancesGETById
@@ -116,7 +116,7 @@ paths:
           default:
             statusCode: 200
             responseParameters:
-              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-request-id'''
               method.response.header.Access-Control-Allow-Methods: '''*'''
               method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
@@ -230,7 +230,7 @@ paths:
           default:
             statusCode: "200"
             responseParameters:
-              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key'''
+              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-request-id'''
               method.response.header.Access-Control-Allow-Methods: '''*'''
               method.response.header.Access-Control-Allow-Origin: '''*'''
             responseTemplates:
