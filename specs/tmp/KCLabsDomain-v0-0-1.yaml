@@ -1,0 +1,35 @@
+openapi: 3.0.1
+info:
+  description: "This is the definition for general components API, Labs version"
+  version: "1.0.0"
+  title: "General Components Labs API"
+
+
+components:
+  schemas:
+    Balance:
+      type: object
+      description: The balance object
+      properties:
+        id:
+          type: number
+          description: The id
+        code:
+          type: string
+          description: The code
+        user:
+          type: string
+          description: The user
+        average:
+          type: number
+          description: The average
+        current:
+          type: number
+          description: The current
+        active:
+          type: boolean
+          description: The active
+        cuttofDate:
+          type: string
+          description: The cuttofDate
+          format: date
