@@ -1,18 +1,30 @@
 #!/bin/sh
-sam --version
-aws --version
 
-packageVars=$(python3 scripts/python/parameters.py 'package')
-cd .stack/
-#Sam package
-echo "[EXEC] sam package --template-file template.yaml ${packageVars} --output-template-file packaged.yaml"
-sam package --template-file ../template.yaml ${packageVars} --output-template-file packaged.yaml
+start_time=$(date +%s)
+echo "STARTING BUILD..."
+. ./scripts/build_project.sh
+echo "BUILD FINISHED"
 
-cd ../
-deployVars=$(python3 scripts/python/parameters.py 'deploy')
-cd .stack/
-#Sam deploy
-echo "[EXEC] sam deploy --template-file packaged.yaml ${deployVars}"
-sam deploy --template-file packaged.yaml ${deployVars}
+echo "---------------------"
 
-echo "Deploy finished successfully!"
+echo "STARTING RESOLVE YAML..."
+. ./scripts/resolve_yaml.sh
+echo "RESOLVE YAML FINISHED"
+
+echo "STARTING DEPLOY..."
+. ./scripts/deploy_stack.sh
+echo "DEPLOY FINISHED"
+
+
+end_time=$(date +%s)
+total_time=$((end_time - start_time))
+echo "Total time: $total_time seconds"
+
+hours=$(( total_time / 3600 ))
+seconds=$(( total_time % 3600 ))
+minutes=$(( total_time / 60 ))
+seconds=$(( total_time % 60 ))
+
+formatted_time=$(printf "%02d Hours : %02d Mins : %02d Secs." $hours $minutes $seconds)
+
+echo "Finish execution: " $formatted_time

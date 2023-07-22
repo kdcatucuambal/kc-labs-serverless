@@ -1,0 +1,771 @@
+openapi: 3.0.1
+info:
+  title:
+    Fn::Sub: ${EnvironmentId} - labs-products-api
+  version: 0.0.1
+  description: |
+    This is a sample api labs using Java, products
+
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params-only:
+    validateRequestBody: false
+    validateRequestParameters: true
+
+
+paths:
+  /labs/products/{id}:
+    get:
+      security:
+        - api_key: [ ]
+        - authorizer: [ ]
+      x-amazon-apigateway-request-validator: all
+      summary: Return a product by id
+      description: Return a product by id
+      operationId: LabsProductGETById
+      parameters:
+        - $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/parameters/x-request-id'
+        - $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/parameters/x-ip-address'
+        - $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/parameters/Authorization'
+
+        - name: id
+          in: path
+          description: Id of product to return
+          required: true
+          schema:
+            type: string
+            default: A001
+
+      responses:
+        200:
+          description: OK
+          headers:
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            x-jws-signature:
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/x-jws-signature'
+            Content-Language:
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/Content-Language'
+          content:
+            application/json:
+              schema:
+                $ref: 'KCLabsDomain-v0-0-1.yaml#/components/schemas/Product'
+
+        400:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response400'
+        401:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response401'
+        403:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response403'
+        404:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response404'
+        409:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response409'
+        429:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response429'
+        500:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response500'
+
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        type: aws
+        timeoutInMillis: 20000
+        uri:
+          Fn::Join:
+            - ""
+            - - Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsProductsGETByIdLambda.Arn}:"
+              - "${stageVariables.version_alias}/invocations"
+        passThroughBehavior: when_no_templates
+        requestTemplates:
+          application/json: |-
+            {
+              "header": {
+                "aws_request_id": "$context.requestId",
+                "x_authorization": "$input.params().header.get('Authorization')",
+                "x_request_id": "$input.params().header.get('x-request-id')",
+                "x_ip_address": "$input.params().header.get('x-ip-address')"
+              },
+              "body" : $input.json('$'),
+              "getbody": {
+                "queries":{
+                  #foreach($param in $input.params().querystring.keySet())
+                  "$param": "$util.escapeJavaScript($input.params().querystring.get($param))"#if($foreach.hasNext),#end
+                  #end
+                },
+                "params": {
+                  #foreach($param in $input.params().path.keySet())
+                  "$param": "$util.escapeJavaScript($input.params().path.get($param))"#if($foreach.hasNext),#end
+                  #end
+                }
+              },
+              "service": {
+                "apiId": "$context.apiId",
+                "operationId": "LabsProductsGetById"
+              }
+            }
+        responses:
+          default:
+            statusCode: 200
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                $input.json('$.body')
+          400:
+            statusCode: 400
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "El mensaje de solicitud no se encuentra debidamente formateado."}
+          401:
+            statusCode: 401
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "No se encuentra autorizado para realizar la operación."}
+
+          403:
+            statusCode: 403
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "La solicitud ha sido rechazada."}
+
+          404:
+            statusCode: 404
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "El objeto no fue encontrado."}
+
+          409:
+            statusCode: 409
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "La operación presentó un error durante la ejecución. :)"}
+
+          429:
+            statusCode: 429
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "Se ha excedido el número de solicitudes permitidas."}
+
+          500|.*timed.*:
+            statusCode: 500
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                #set($cause = $input.path('$.cause'))
+                 $cause.errorMessage
+
+    delete:
+      security:
+        - api_key: [ ]
+        - authorizer: [ ]
+      x-amazon-apigateway-request-validator: all
+      summary: Delete a product by id
+      description: Delete a product by id
+      operationId: LabsProductDEL
+      parameters:
+        - $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/parameters/x-request-id'
+        - $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/parameters/x-ip-address'
+        - $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/parameters/Authorization'
+
+        - name: id
+          in: path
+          description: Product id to delete
+          required: true
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: OK
+          headers:
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            x-jws-signature:
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/x-jws-signature'
+            Content-Language:
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/Content-Language'
+          content:
+            application/json:
+              schema:
+                type: boolean
+
+        400:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response400'
+        401:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response401'
+        403:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response403'
+        404:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response404'
+        409:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response409'
+        429:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response429'
+        500:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response500'
+
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        type: aws
+        timeoutInMillis: 20000
+        uri:
+          Fn::Join:
+            - ""
+            - - Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsProductsDELLambda.Arn}:"
+              - "${stageVariables.version_alias}/invocations"
+        passThroughBehavior: when_no_templates
+        requestTemplates:
+          application/json: |-
+            {
+              "header": {
+                "aws_request_id": "$context.requestId",
+                "x_authorization": "$input.params().header.get('Authorization')",
+                "x_request_id": "$input.params().header.get('x-request-id')",
+                "x_ip_address": "$input.params().header.get('x-ip-address')"
+              },
+              "body" : $input.json('$'),
+              "getbody": {
+                "queries":{
+                  #foreach($param in $input.params().querystring.keySet())
+                  "$param": "$util.escapeJavaScript($input.params().querystring.get($param))"#if($foreach.hasNext),#end
+                  #end
+                },
+                "params": {
+                  #foreach($param in $input.params().path.keySet())
+                  "$param": "$util.escapeJavaScript($input.params().path.get($param))"#if($foreach.hasNext),#end
+                  #end
+                }
+              },
+              "service": {
+                "apiId": "$context.apiId",
+                "operationId": "LabsProductsGetById"
+              }
+            }
+        responses:
+          default:
+            statusCode: 200
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                $input.json('$.body')
+          400:
+            statusCode: 400
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "El mensaje de solicitud no se encuentra debidamente formateado."}
+          401:
+            statusCode: 401
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "No se encuentra autorizado para realizar la operación."}
+
+          403:
+            statusCode: 403
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "La solicitud ha sido rechazada."}
+
+          404:
+            statusCode: 404
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "El objeto no fue encontrado."}
+
+          409:
+            statusCode: 409
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "La operación presentó un error durante la ejecución. :)"}
+
+          429:
+            statusCode: 429
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "Se ha excedido el número de solicitudes permitidas."}
+
+          500|.*timed.*:
+            statusCode: 500
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                #set($cause = $input.path('$.cause'))
+                 $cause.errorMessage
+  /labs/products:
+    get:
+      security:
+        - api_key: [ ]
+        - authorizer: [ ]
+      x-amazon-apigateway-request-validator: all
+      summary: Return all products
+      description: Return all products
+      operationId: LabsProductGETAll
+      parameters:
+        - $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/parameters/x-request-id'
+        - $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/parameters/x-ip-address'
+        - $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/parameters/Authorization'
+
+
+      responses:
+        200:
+          description: OK
+          headers:
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            x-jws-signature:
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/x-jws-signature'
+            Content-Language:
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/Content-Language'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllProductsRs'
+
+        400:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response400'
+        401:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response401'
+        403:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response403'
+        404:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response404'
+        409:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response409'
+        429:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response429'
+        500:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response500'
+
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        type: aws
+        timeoutInMillis: 20000
+        uri:
+          Fn::Join:
+            - ""
+            - - Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsProductsGETAllLambda.Arn}:"
+              - "${stageVariables.version_alias}/invocations"
+        passThroughBehavior: when_no_templates
+        requestTemplates:
+          application/json: |-
+            {
+              "header": {
+                "aws_request_id": "$context.requestId",
+                "x_authorization": "$input.params().header.get('Authorization')",
+                "x_request_id": "$input.params().header.get('x-request-id')",
+                "x_ip_address": "$input.params().header.get('x-ip-address')"
+              },
+              "body" : $input.json('$'),
+              "getbody": {
+                "queries":{
+                  #foreach($param in $input.params().querystring.keySet())
+                  "$param": "$util.escapeJavaScript($input.params().querystring.get($param))"#if($foreach.hasNext),#end
+                  #end
+                },
+                "params": {
+                  #foreach($param in $input.params().path.keySet())
+                  "$param": "$util.escapeJavaScript($input.params().path.get($param))"#if($foreach.hasNext),#end
+                  #end
+                }
+              },
+              "service": {
+                "apiId": "$context.apiId",
+                "operationId": "LabsProductsGetById"
+              }
+            }
+        responses:
+          default:
+            statusCode: 200
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                $input.json('$.body')
+          400:
+            statusCode: 400
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "El mensaje de solicitud no se encuentra debidamente formateado."}
+          401:
+            statusCode: 401
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "No se encuentra autorizado para realizar la operación."}
+
+          403:
+            statusCode: 403
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "La solicitud ha sido rechazada."}
+
+          404:
+            statusCode: 404
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "El objeto no fue encontrado."}
+
+          409:
+            statusCode: 409
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "La operación presentó un error durante la ejecución. :)"}
+
+          429:
+            statusCode: 429
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "Se ha excedido el número de solicitudes permitidas."}
+
+          500|.*timed.*:
+            statusCode: 500
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                #set($cause = $input.path('$.cause'))
+                 $cause.errorMessage
+
+
+    post:
+      security:
+        - api_key: [ ]
+        - authorizer: [ ]
+      x-amazon-apigateway-request-validator: all
+      summary: Add a new product to the store
+      description: Add a new product to the store
+      operationId: LabsProductPST
+      parameters:
+        - $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/parameters/x-request-id'
+        - $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/parameters/x-ip-address'
+        - $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/parameters/Authorization'
+
+      requestBody:
+        description: Product object that needs to be added to the store
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'KCLabsDomain-v0-0-1.yaml#/components/schemas/Product'
+
+      responses:
+        201:
+          description: OK
+          headers:
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+            x-jws-signature:
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/x-jws-signature'
+            Content-Language:
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/Content-Language'
+          content:
+            application/json:
+              schema:
+                type: boolean
+
+        400:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response400'
+        401:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response401'
+        403:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response403'
+        404:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response404'
+        409:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response409'
+        429:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response429'
+        500:
+          $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/responses/Response500'
+
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        type: aws
+        timeoutInMillis: 20000
+        uri:
+          Fn::Join:
+            - ""
+            - - Fn::Sub: "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LabsProductsPSTLambda.Arn}:"
+              - "${stageVariables.version_alias}/invocations"
+        passThroughBehavior: when_no_templates
+        requestTemplates:
+          application/json: |-
+            {
+              "header": {
+                "aws_request_id": "$context.requestId",
+                "x_authorization": "$input.params().header.get('Authorization')",
+                "x_request_id": "$input.params().header.get('x-request-id')",
+                "x_ip_address": "$input.params().header.get('x-ip-address')"
+              },
+              "body" : $input.json('$'),
+              "getbody": {
+                "queries":{
+                  #foreach($param in $input.params().querystring.keySet())
+                  "$param": "$util.escapeJavaScript($input.params().querystring.get($param))"#if($foreach.hasNext),#end
+                  #end
+                },
+                "params": {
+                  #foreach($param in $input.params().path.keySet())
+                  "$param": "$util.escapeJavaScript($input.params().path.get($param))"#if($foreach.hasNext),#end
+                  #end
+                }
+              },
+              "service": {
+                "apiId": "$context.apiId",
+                "operationId": "LabsProductsGetById"
+              }
+            }
+        responses:
+          default:
+            statusCode: 201
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                $input.json('$.body')
+          400:
+            statusCode: 400
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "El mensaje de solicitud no se encuentra debidamente formateado."}
+          401:
+            statusCode: 401
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "No se encuentra autorizado para realizar la operación."}
+
+          403:
+            statusCode: 403
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "La solicitud ha sido rechazada."}
+
+          404:
+            statusCode: 404
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "El objeto no fue encontrado."}
+
+          409:
+            statusCode: 409
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "La operación presentó un error durante la ejecución. :)"}
+
+          429:
+            statusCode: 429
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                {"message": "Se ha excedido el número de solicitudes permitidas."}
+
+          500|.*timed.*:
+            statusCode: 500
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: '''*'''
+              method.response.header.Access-Control-Allow-Methods: '''*'''
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+            responseTemplates:
+              application/json: |-
+                #set($res = $input.path('$'))
+                #set($cause = $input.path('$.cause'))
+                 $cause.errorMessage
+
+components:
+  schemas:
+
+    GetAllProductsRs:
+      type: array
+      items:
+        $ref: 'KCLabsDomain-v0-0-1.yaml#/components/schemas/Product'
+
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: 'API key or aborts with Unauthorized'
+    authorizer:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Token JWT para el consumo del API.'
+      x-amazon-apigateway-authtype: custom
+      x-amazon-apigateway-authorizer:
+        type: token
+        identitySource: v1
+        authorizerUri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:${LambdaAuthorizer}:production/invocations
+        authorizerResultTtlInSeconds: 3000
+        identityValidationExpression: ^Bearer [-0-9a-zA-z\.]*$
