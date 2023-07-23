@@ -68,6 +68,10 @@ Parameters:
     Type: String
     Description: message error 500
 
+  CustomDomainName:
+    Type: String
+    Description: Custom Domain
+
 
 Conditions:
   LambdaProvisioned: !Equals [!Ref ProvisionedConcurrencyConfigEnabled, "true"]
@@ -163,6 +167,16 @@ Resources:
     Properties:
       LogGroupName: !Sub "API-Gateway-Execution-Logs_${LabsApiGateway}/v1"
       RetentionInDays: !Ref LogRetentionInDays
+
+  LabsApiMapping:
+    Type: AWS::ApiGatewayV2::ApiMapping
+    DependsOn:
+         - "LabsDeployment"
+    Properties:
+      DomainName: !Ref CustomDomainName
+      ApiId: !Ref LabsApiGateway
+      Stage: !Ref LabsApiGatewayv1Stage
+      ApiMappingKey: "live2"
 
   LabsProductsGETByIdLambda:
     Type: AWS::Serverless::Function
@@ -361,6 +375,14 @@ Outputs:
   ApiId:
     Description: API Gateway ID
     Value: !Ref LabsApiGateway
+
+  ApiStageW2Tmp:
+    Description: API Gateway Stage
+    Value: !Ref LabsApiGateway.Stage
+
+  ApiStageW3Tmp:
+    Description: API Gateway Stage
+    Value: !Ref LabsApiGatewayv1Stage
 
   ApiStage:
     Description: API Gateway Stage

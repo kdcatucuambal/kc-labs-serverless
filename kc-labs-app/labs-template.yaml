@@ -60,6 +60,18 @@ Parameters:
     Type: String
     Description: message error 500
 
+  PublicCertificateArn:
+    Type: String
+    Description: Public Certificate Arn
+
+  CustomDomainName:
+    Type: String
+    Description: Custom Domain
+
+Conditions:
+  WithCustomDomain: !And [!Not [!Equals [!Ref CustomDomainName, ""]], !Not [!Equals [!Ref PublicCertificateArn, ""]]]
+
+
 Resources:
   LabsLayer:
     Type: AWS::Serverless::LayerVersion
@@ -152,7 +164,8 @@ Resources:
         LambdaAuthorizer: !Ref LambdaAuthorizer
         ProvisionedConcurrencyConfigEnabled: !Ref ProvisionedConcurrencyConfigEnabled
         LabsRoleArn: !GetAtt LabsRole.Arn
-        LabsLayer: !Ref LabsLayer 
+        LabsLayer: !Ref LabsLayer
+        CustomDomainName: !Ref CustomDomainName
         ApiGatewayResponseMessage400: !Ref ApiGatewayResponseMessage400
         ApiGatewayResponseMessage401: !Ref ApiGatewayResponseMessage401
         ApiGatewayResponseMessage403: !Ref ApiGatewayResponseMessage403
@@ -175,6 +188,7 @@ Resources:
         ProvisionedConcurrencyConfigEnabled: !Ref ProvisionedConcurrencyConfigEnabled
         LabsRoleArn: !GetAtt LabsRole.Arn
         LabsLayer: !Ref LabsLayer
+        CustomDomainName: !Ref CustomDomainName
         ApiGatewayResponseMessage400: !Ref ApiGatewayResponseMessage400
         ApiGatewayResponseMessage401: !Ref ApiGatewayResponseMessage401
         ApiGatewayResponseMessage403: !Ref ApiGatewayResponseMessage403
@@ -184,6 +198,14 @@ Resources:
         ApiGatewayResponseMessage429: !Ref ApiGatewayResponseMessage429
         ApiGatewayResponseMessage500: !Ref ApiGatewayResponseMessage500
 
+  DomainName:
+    Type: AWS::ApiGatewayV2::DomainName
+    Condition: WithCustomDomain
+    Properties:
+      DomainName: !Ref CustomDomainName
+      DomainNameConfigurations:
+        - CertificateArn: !Ref PublicCertificateArn
+          EndpointType: REGIONAL
 
 Outputs:
   LabsLayer:
@@ -205,6 +227,13 @@ Outputs:
   LabsUsagePlanKey:
     Description: "Labs Usage Plan Key"
     Value: !Ref LabsUsagePlanKey
+
+  ArnApiDomainName:
+    Description: "Labs API Domain Name"
+    Value: !If
+      - WithCustomDomain
+      - !GetAtt DomainName.RegionalDomainName 
+      - !Sub "No custom domain configured for ${EnvironmentId}- environment"
         
     
 

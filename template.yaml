@@ -28,6 +28,14 @@ Parameters:
     Type: String
     Description: Enable Provisioned Concurrency Config
 
+  PublicCertificateArn:
+    Type: String
+    Description: Public Certificate Arn
+
+  CustomDomainName:
+    Type: String
+    Description: Custom Domain
+
 
 Resources:
   LambdasInfraestructure:
@@ -41,6 +49,8 @@ Resources:
         LogRetentionInDays: !Ref LogRetentionInDays
         LambdaAuthorizer: !Ref LambdaAuthorizer
         ProvisionedConcurrencyConfigEnabled: !Ref ProvisionedConcurrencyConfigEnabled
+        PublicCertificateArn: !Ref PublicCertificateArn
+        CustomDomainName: !Ref CustomDomainName
         ApiGatewayResponseMessage400: "The message is not properly formatted."
         ApiGatewayResponseMessage401: "You are not authorized to access this resource."
         ApiGatewayResponseMessage403: "The request has been denied."
@@ -49,3 +59,8 @@ Resources:
         ApiGatewayResponseMessage409: "The request had a conflict."
         ApiGatewayResponseMessage429: "Too many requests have been made."
         ApiGatewayResponseMessage500: "An error occurred during the request."
+
+Outputs:
+  ArnApiDomainName:
+    Description: "Retorna el API Gateway damain name."
+    Value: !GetAtt LambdasInfraestructure.Outputs.ArnApiDomainName
