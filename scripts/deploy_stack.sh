@@ -16,3 +16,11 @@ echo "[EXEC] sam deploy --template-file packaged.yaml ${deployVars}"
 sam deploy --template-file packaged.yaml ${deployVars}
 
 echo "Deploy finished successfully!"
+
+echo "Checking if is necessary to create the public DNS record..."
+
+cd ../
+
+. ./scripts/shell/publicApiDns.sh
+
+echo "Finish publicApiDns.sh successfully!"

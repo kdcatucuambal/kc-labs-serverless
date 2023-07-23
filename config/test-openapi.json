@@ -9,7 +9,8 @@
     "project": {
       "project-key": "kc-lab-serverless",
       "path-service": "kc-labs-app",
-      "backend-branch": "develop"
+      "backend-branch": "develop",
+      "hosted-zone-id": "Z09665002K7X5THA6XUVX"
     },
     "deploy": {
       "stack-name": "${EnvironmentId}-labs-serverless",

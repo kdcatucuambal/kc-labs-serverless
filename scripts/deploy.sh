@@ -14,10 +14,27 @@ echo "RESOLVE YAML FINISHED"
 echo "STARTING DEPLOY..."
 . ./scripts/deploy_stack.sh
 echo "DEPLOY FINISHED"
-
-
 end_time=$(date +%s)
 total_time=$((end_time - start_time))
+logo=$(cat << "EOF"
+ /\     /\      BY KEVIN CATUCUAMBA           
+{  `---'  }               
+{  O   O  }
+~~>  V  <~~
+ \  \|/  /
+  `-----'____
+  /     \    \_
+ {       }\  )_\_   _
+ |  \_/  |/ /  \_\_/ )
+  \__/  /(_/     \__/
+    (__/
+EOF
+)
+echo "--------------------------------"
+echo "$logo"
+echo " K C L A B S - 2 0 2 3"
+echo "--------------------------------"
+
 echo "Total time: $total_time seconds"
 
 hours=$(( total_time / 3600 ))
