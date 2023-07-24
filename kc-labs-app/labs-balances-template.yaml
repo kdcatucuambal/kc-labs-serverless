@@ -176,7 +176,7 @@ Resources:
       DomainName: !Ref CustomDomainName
       ApiId: !Ref LabsApiGateway
       Stage: !Ref LabsApiGatewayv1Stage
-      ApiMappingKey: "live1"
+      ApiMappingKey: !Sub "bal/${LabsApiGatewayv1Stage}"
 
 
   LabsBalancesGETByIdLambda:

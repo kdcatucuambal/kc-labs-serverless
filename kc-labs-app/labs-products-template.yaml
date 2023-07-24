@@ -176,7 +176,7 @@ Resources:
       DomainName: !Ref CustomDomainName
       ApiId: !Ref LabsApiGateway
       Stage: !Ref LabsApiGatewayv1Stage
-      ApiMappingKey: "live2"
+      ApiMappingKey: !Sub "pro/${LabsApiGatewayv1Stage}"
 
   LabsProductsGETByIdLambda:
     Type: AWS::Serverless::Function
