@@ -75,7 +75,7 @@ Parameters:
 
 Conditions:
   LambdaProvisioned: !Equals [!Ref ProvisionedConcurrencyConfigEnabled, "true"]
-
+  WithCustomDomain: !Not [!Equals [!Ref CustomDomainName, ""]]
 
 Globals:
   Function:
@@ -170,6 +170,7 @@ Resources:
 
   LabsApiMapping:
     Type: AWS::ApiGatewayV2::ApiMapping
+    Condition: WithCustomDomain
     DependsOn:
          - "LabsDeployment"
     Properties:

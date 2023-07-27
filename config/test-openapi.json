@@ -46,11 +46,11 @@
         },
         {
           "parameterKey": "CustomDomainName",
-          "parameterValue": "labs-${EnvironmentId}.megapro.site"
+          "parameterValue": ""
         },
         {
           "parameterKey": "PublicCertificateArn",
-          "parameterValue": "arn:aws:acm:us-east-1:818802851925:certificate/7799a8b0-a3fe-4820-a645-e883cfb599d1"
+          "parameterValue": ""
         }
       ]
     }
