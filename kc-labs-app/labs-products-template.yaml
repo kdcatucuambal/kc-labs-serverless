@@ -72,9 +72,13 @@ Parameters:
     Type: String
     Description: Custom Domain
 
+  PublicCertificateArn:
+    Type: String
+    Description: Public Certificate Arn
 
 Conditions:
   LambdaProvisioned: !Equals [!Ref ProvisionedConcurrencyConfigEnabled, "true"]
+  WithCustomDomain: !And [!Not [!Equals [!Ref CustomDomainName, ""]], !Not [!Equals [!Ref PublicCertificateArn, ""]]]
 
 Globals:
   Function:
@@ -170,6 +174,7 @@ Resources:
 
   LabsApiMapping:
     Type: AWS::ApiGatewayV2::ApiMapping
+    Condition: WithCustomDomain
     DependsOn:
          - "LabsDeployment"
     Properties:

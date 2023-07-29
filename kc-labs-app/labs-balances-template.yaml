@@ -72,10 +72,13 @@ Parameters:
     Type: String
     Description: Custom Domain
 
+  PublicCertificateArn:
+    Type: String
+    Description: Public Certificate Arn
 
 Conditions:
   LambdaProvisioned: !Equals [!Ref ProvisionedConcurrencyConfigEnabled, "true"]
-
+  WithCustomDomain: !And [!Not [!Equals [!Ref CustomDomainName, ""]], !Not [!Equals [!Ref PublicCertificateArn, ""]]]
 
 Globals:
   Function:
@@ -109,7 +112,7 @@ Globals:
             gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
             gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
         ResponseTemplates:
-          application/json: '{"message": "The parameters is not properly formatted."}'
+          application/json: !Sub '{"message": "${ApiGatewayResponseMessage400}"}'
       BAD_REQUEST_BODY:
         StatusCode: "400"
         ResponseParameters:
@@ -117,7 +120,7 @@ Globals:
             gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
             gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
         ResponseTemplates:
-          application/json: '{"message": "The body is not properly formatted."}'
+          application/json: !Sub '{"message": "${ApiGatewayResponseMessage400}"}'
       ACCESS_DENIED:
         StatusCode: "403"
         ResponseParameters:
@@ -170,6 +173,7 @@ Resources:
 
   LabsApiMapping:
     Type: AWS::ApiGatewayV2::ApiMapping
+    Condition: WithCustomDomain
     DependsOn:
          - "LabsDeployment"
     Properties:
