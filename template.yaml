@@ -36,6 +36,10 @@ Parameters:
     Type: String
     Description: Custom Domain
 
+  SecretName:
+    Type: String
+    Description: Secret Name
+
 
 Resources:
   LambdasInfraestructure:
@@ -51,6 +55,7 @@ Resources:
         ProvisionedConcurrencyConfigEnabled: !Ref ProvisionedConcurrencyConfigEnabled
         PublicCertificateArn: !Ref PublicCertificateArn
         CustomDomainName: !Ref CustomDomainName
+        SecretName: !Ref SecretName
         ApiGatewayResponseMessage400: "The message is not properly formatted."
         ApiGatewayResponseMessage401: "You are not authorized to access this resource."
         ApiGatewayResponseMessage403: "The request has been denied."

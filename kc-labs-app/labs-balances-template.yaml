@@ -76,6 +76,10 @@ Parameters:
     Type: String
     Description: Public Certificate Arn
 
+  SecretName:
+    Type: String
+    Description: Secret Name
+
 Conditions:
   LambdaProvisioned: !Equals [!Ref ProvisionedConcurrencyConfigEnabled, "true"]
   WithCustomDomain: !And [!Not [!Equals [!Ref CustomDomainName, ""]], !Not [!Equals [!Ref PublicCertificateArn, ""]]]
@@ -92,7 +96,7 @@ Globals:
     Environment:
       Variables:
         message: "Hello from Lambda"
-        API_KEY_ID: "oc3o45bnge"
+        SECRET_NAME: !Ref SecretName
   Api:
     OpenApiVersion: 3.0.1
     TracingEnabled: True
@@ -196,6 +200,7 @@ Resources:
         Variables:
           PARAM1: VALUE
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+          DB_TARGET: readreplica
       Events:
         EventApi:
           Type: Api
@@ -244,6 +249,7 @@ Resources:
         Variables:
           PARAM1: VALUE
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+          DB_TARGET: readreplica
       Events:
         EventApi:
           Type: Api
@@ -293,6 +299,7 @@ Resources:
         Variables:
           PARAM1: VALUE
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+          DB_TARGET: master
       Events:
         EventApi:
           Type: Api

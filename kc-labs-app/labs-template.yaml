@@ -28,6 +28,10 @@ Parameters:
     Type: String
     Description: Enable Provisioned Concurrency Config
 
+  SecretName:
+    Type: String
+    Description: Secret Name
+
   ApiGatewayResponseMessage400:
     Type: String
     Description: message error 400
@@ -165,6 +169,7 @@ Resources:
         ProvisionedConcurrencyConfigEnabled: !Ref ProvisionedConcurrencyConfigEnabled
         LabsRoleArn: !GetAtt LabsRole.Arn
         LabsLayer: !Ref LabsLayer
+        SecretName: !Ref SecretName
         CustomDomainName: !If 
           - WithCustomDomain
           - !Ref CustomDomainName
