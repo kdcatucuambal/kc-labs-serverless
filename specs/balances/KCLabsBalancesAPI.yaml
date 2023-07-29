@@ -652,6 +652,20 @@ components:
       items:
         $ref: 'KCLabsDomain-v0-0-1.yaml#/components/schemas/Balance'
 
+    BalancePSTRq:
+      type: object
+      required:
+        - code
+        - user
+        - region
+        - average
+        - current
+        - active
+        - cuttoffDate
+      allOf:
+        - $ref: 'KCLabsDomain-v0-0-1.yaml#/components/schemas/Balance'
+
+
   securitySchemes:
     api_key:
       type: apiKey
