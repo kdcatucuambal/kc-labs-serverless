@@ -165,7 +165,11 @@ Resources:
         ProvisionedConcurrencyConfigEnabled: !Ref ProvisionedConcurrencyConfigEnabled
         LabsRoleArn: !GetAtt LabsRole.Arn
         LabsLayer: !Ref LabsLayer
-        CustomDomainName: !Ref CustomDomainName
+        CustomDomainName: !If 
+          - WithCustomDomain
+          - !Ref CustomDomainName
+          - !Ref AWS::NoValue
+        PublicCertificateArn: !Ref PublicCertificateArn
         ApiGatewayResponseMessage400: !Ref ApiGatewayResponseMessage400
         ApiGatewayResponseMessage401: !Ref ApiGatewayResponseMessage401
         ApiGatewayResponseMessage403: !Ref ApiGatewayResponseMessage403
@@ -192,6 +196,7 @@ Resources:
           - WithCustomDomain
           - !Ref CustomDomainName
           - !Ref AWS::NoValue
+        PublicCertificateArn: !Ref PublicCertificateArn
         ApiGatewayResponseMessage400: !Ref ApiGatewayResponseMessage400
         ApiGatewayResponseMessage401: !Ref ApiGatewayResponseMessage401
         ApiGatewayResponseMessage403: !Ref ApiGatewayResponseMessage403
