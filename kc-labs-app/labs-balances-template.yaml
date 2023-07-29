@@ -200,7 +200,7 @@ Resources:
         Variables:
           PARAM1: VALUE
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
-          DB_TARGET: readreplica
+          DB_TARGET: readReplica
       Events:
         EventApi:
           Type: Api
@@ -249,7 +249,7 @@ Resources:
         Variables:
           PARAM1: VALUE
           JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
-          DB_TARGET: readreplica
+          DB_TARGET: readReplica
       Events:
         EventApi:
           Type: Api
