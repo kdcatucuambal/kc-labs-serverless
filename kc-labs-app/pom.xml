@@ -39,7 +39,7 @@
         <dependency>
             <groupId>com.kc.cloud</groupId>
             <artifactId>kc-cloud-core-util</artifactId>
-            <version>0.0.2-KEC-SNAPSHOT</version>
+            <version>0.0.3-KEC-SNAPSHOT</version>
         </dependency>
 
         <dependency>
