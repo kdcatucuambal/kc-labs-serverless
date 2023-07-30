@@ -4,7 +4,7 @@ info:
     Fn::Sub: ${EnvironmentId} - labs-balances-api
   version: 0.0.1
   description: |
-    This is a sample api labs using Java
+    This is the API for the balances service.
 
 x-amazon-apigateway-request-validators:
   all:
