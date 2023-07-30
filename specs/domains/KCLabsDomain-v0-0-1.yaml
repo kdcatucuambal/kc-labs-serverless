@@ -29,7 +29,7 @@ components:
         active:
           type: boolean
           description: The active
-        cuttofDate:
+        cuttoffDate:
           type: string
           description: The cuttofDate
           format: date
