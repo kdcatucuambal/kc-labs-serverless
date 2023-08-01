@@ -3,7 +3,7 @@
 start_time=$(date +%s)
 echo "STARTING BUILD..."
 . ./scripts/build_project.sh
-echo "BUILD FINISHED"
+echo "BUILD FINISHED .."
 
 echo "---------------------"
 
