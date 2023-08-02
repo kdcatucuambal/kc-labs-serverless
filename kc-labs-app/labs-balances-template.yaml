@@ -97,6 +97,8 @@ Globals:
       Variables:
         message: "Hello from Lambda"
         SECRET_NAME: !Ref SecretName
+        MAXIMUM_POOL_SIZE: 3
+        MINIMUM_IDLE: 1
   Api:
     OpenApiVersion: 3.0.1
     TracingEnabled: True
