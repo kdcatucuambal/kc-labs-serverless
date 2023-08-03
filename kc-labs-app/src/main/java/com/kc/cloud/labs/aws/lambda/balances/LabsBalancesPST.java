@@ -4,6 +4,7 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.kc.cloud.labs.aws.models.app.Balance;
+import com.kc.cloud.labs.aws.models.app.MessageResponse;
 import com.kc.cloud.labs.aws.models.app.Response;
 import com.kc.cloud.labs.aws.models.request.RequestObject;
 import com.kc.cloud.labs.aws.utils.BalanceDao;
@@ -29,15 +30,17 @@ public class LabsBalancesPST implements RequestStreamHandler {
         RequestObject<Balance> requestObject = ConvertDataUtil.deserializeObject(jsonRequest, new TypeReference<RequestObject<Balance>>() {});
         boolean balanceCreated = balanceV2Dao.save(requestObject.getBody());
         logger.info("Balance created: " + balanceCreated);
-        String jsonResponse = ConvertDataUtil.serializeObject(this.getResponse(requestObject.getBody()));
+        MessageResponse mr = new MessageResponse();
+        mr.setMessage(balanceCreated ? "Balance created successfully!" : "Something goes wrong");
+        String jsonResponse = ConvertDataUtil.serializeObject(this.getResponse(mr));
         logger.info("Response: " + jsonResponse);
         outputStream.write(jsonResponse.getBytes());
     }
 
-    public Response<Balance> getResponse(Balance balance) {
-        Response<Balance> response = new Response<>();
+    public Response<MessageResponse> getResponse(MessageResponse msg) {
+        Response<MessageResponse> response = new Response<>();
         response.setStatusCode(201);
-        response.setBody(balance);
+        response.setBody(msg);
         return response;
     }
 

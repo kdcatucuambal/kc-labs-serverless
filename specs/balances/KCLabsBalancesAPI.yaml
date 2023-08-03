@@ -467,7 +467,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'KCLabsDomain-v0-0-1.yaml#/components/schemas/Balance'
+                $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/schemas/SuccessResponse'
 
 
         400:

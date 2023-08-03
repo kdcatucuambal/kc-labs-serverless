@@ -13,6 +13,13 @@ components:
           type: string
           description: "The error message"    
 
+    SuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: "The success message"
+
   parameters:
     x-request-id:
       name: x-request-id
