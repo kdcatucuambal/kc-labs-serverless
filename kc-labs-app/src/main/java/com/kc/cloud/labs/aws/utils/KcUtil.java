@@ -1,18 +1,13 @@
 package com.kc.cloud.labs.aws.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kc.cloud.api.ApiGatewayUtil;
-import com.kc.cloud.labs.aws.lambda.products.LabsProductsGETAll;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.kc.cloud.api.ApiGatewayUtil;
+
+
+
 import java.util.Map;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
+
 
 public class KcUtil {
     private final static Logger logger = Logger.getLogger(KcUtil.class.getName());

@@ -3,9 +3,9 @@ package com.kc.cloud.labs.aws.lambda.products;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.kc.cloud.labs.aws.models.app.Response;
-import com.kc.cloud.labs.aws.models.request.RequestObject;
 import com.kc.cloud.labs.aws.services.ProductService;
+import com.kc.cloud.models.RequestObject;
+import com.kc.cloud.models.ResponseObject;
 import com.kc.cloud.util.ConvertDataUtil;
 
 
@@ -35,8 +35,8 @@ public class LabsProductsDEL implements RequestStreamHandler {
         outputStream.write(jsonResponse.getBytes());
     }
 
-    public Response<Boolean> getResponse(Boolean isSaved) {
-        Response<Boolean> response = new Response<>();
+    public ResponseObject<Boolean> getResponse(Boolean isSaved) {
+        ResponseObject<Boolean> response = new ResponseObject<>();
         response.setStatusCode(200);
         response.setBody(isSaved);
         return response;

@@ -4,10 +4,10 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.kc.cloud.labs.aws.models.app.Product;
-import com.kc.cloud.labs.aws.models.app.Response;
-import com.kc.cloud.labs.aws.models.request.RequestObject;
 import com.kc.cloud.labs.aws.services.ProductService;
 import com.kc.cloud.labs.aws.utils.KcUtil;
+import com.kc.cloud.models.RequestObject;
+import com.kc.cloud.models.ResponseObject;
 import com.kc.cloud.util.ConvertDataUtil;
 
 import java.io.IOException;
@@ -40,8 +40,8 @@ public class LabsProductsGETById implements RequestStreamHandler {
         outputStream.write(jsonResponse.getBytes());
     }
 
-    public Response<Product> getResponse(Product product) {
-        Response<Product> response = new Response<>();
+    public ResponseObject<Product> getResponse(Product product) {
+        ResponseObject<Product> response = new ResponseObject<>();
         response.setStatusCode(200);
         response.setBody(product);
         return response;

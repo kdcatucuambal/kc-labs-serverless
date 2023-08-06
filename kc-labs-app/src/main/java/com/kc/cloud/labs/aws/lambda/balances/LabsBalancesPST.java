@@ -8,6 +8,8 @@ import com.kc.cloud.labs.aws.models.app.MessageResponse;
 import com.kc.cloud.labs.aws.models.app.Response;
 import com.kc.cloud.labs.aws.models.request.RequestObject;
 import com.kc.cloud.labs.aws.utils.BalanceDao;
+import com.kc.cloud.models.RequestObject;
+import com.kc.cloud.models.ResponseObject;
 import com.kc.cloud.util.ConvertDataUtil;
 
 import java.io.*;
@@ -30,17 +32,15 @@ public class LabsBalancesPST implements RequestStreamHandler {
         RequestObject<Balance> requestObject = ConvertDataUtil.deserializeObject(jsonRequest, new TypeReference<RequestObject<Balance>>() {});
         boolean balanceCreated = balanceV2Dao.save(requestObject.getBody());
         logger.info("Balance created: " + balanceCreated);
-        MessageResponse mr = new MessageResponse();
-        mr.setMessage(balanceCreated ? "Balance created successfully!" : "Something goes wrong");
-        String jsonResponse = ConvertDataUtil.serializeObject(this.getResponse(mr));
+        String jsonResponse = ConvertDataUtil.serializeObject(this.getResponse(requestObject.getBody()));
         logger.info("Response: " + jsonResponse);
         outputStream.write(jsonResponse.getBytes());
     }
 
-    public Response<MessageResponse> getResponse(MessageResponse msg) {
-        Response<MessageResponse> response = new Response<>();
+    public Response<Balance> getResponse(Balance balance) {
+        Response<Balance> response = new Response<>();
         response.setStatusCode(201);
-        response.setBody(msg);
+        response.setBody(balance);
         return response;
     }
 

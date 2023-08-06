@@ -4,8 +4,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.kc.cloud.labs.aws.models.app.Balance;
-import com.kc.cloud.labs.aws.models.app.Response;
 import com.kc.cloud.labs.aws.utils.BalanceDao;
+import com.kc.cloud.models.ResponseObject;
 import com.kc.cloud.util.ConvertDataUtil;
 
 
@@ -46,8 +46,8 @@ public class LabsBalancesGETById implements RequestStreamHandler {
         output.write(jsonResponse.getBytes(StandardCharsets.UTF_8));
     }
 
-    public Response<Balance> getResponse(Balance balance) {
-        Response<Balance> response = new Response<>();
+    public ResponseObject<Balance> getResponse(Balance balance) {
+        ResponseObject<Balance> response = new ResponseObject<>();
         response.setStatusCode(200);
         response.setBody(balance);
         return response;
