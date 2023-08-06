@@ -2,11 +2,10 @@ package com.kc.cloud.labs.aws.lambda.products;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
-import com.kc.cloud.api.ApiGatewayUtil;
 import com.kc.cloud.labs.aws.models.app.Product;
-import com.kc.cloud.labs.aws.models.app.Response;
 import com.kc.cloud.labs.aws.services.ProductService;
 import com.kc.cloud.labs.aws.utils.KcUtil;
+import com.kc.cloud.models.ResponseObject;
 import com.kc.cloud.util.ConvertDataUtil;
 
 import java.io.IOException;
@@ -28,7 +27,7 @@ public class LabsProductsGETAll implements RequestStreamHandler {
     @Override
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
         logger.info("Invoking lambda: LabsProductsGETAll");
-        Response<List<Product>> responseObject = getResponse(productService.getAll());
+        ResponseObject<List<Product>> responseObject = getResponse(productService.getAll());
         logger.info("Response Object: " + responseObject);
         String jsonResponse = ConvertDataUtil.serializeObject(responseObject);
         logger.info("Response: " + jsonResponse);
@@ -37,8 +36,8 @@ public class LabsProductsGETAll implements RequestStreamHandler {
         outputStream.write(jsonResponse.getBytes());
     }
 
-    public Response<List<Product>> getResponse(List<Product> products) {
-        Response<List<Product>> response = new Response<>();
+    public ResponseObject<List<Product>> getResponse(List<Product> products) {
+        ResponseObject<List<Product>> response = new ResponseObject<>();
         response.setStatusCode(200);
         response.setBody(products);
         return response;

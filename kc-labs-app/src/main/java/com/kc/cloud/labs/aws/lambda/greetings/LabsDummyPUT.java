@@ -5,7 +5,7 @@ import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kc.cloud.labs.aws.lambda.balances.LabsBalancesGETById;
 import com.kc.cloud.labs.aws.models.app.Record;
-import com.kc.cloud.labs.aws.models.app.Response;
+import com.kc.cloud.models.ResponseObject;
 
 import java.io.*;
 import java.util.Date;
@@ -27,7 +27,7 @@ public class LabsDummyPUT implements RequestStreamHandler {
         record.setType("PUTTER");
         record.setDescription("This is a PUT request");
 
-        Response<Record> response = new Response<>();
+        ResponseObject<Record> response = new ResponseObject<>();
 
         response.setStatusCode(200);
         response.setBody(record);

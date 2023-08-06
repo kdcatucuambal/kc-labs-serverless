@@ -4,8 +4,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kc.cloud.labs.aws.models.app.Balance;
-import com.kc.cloud.labs.aws.models.app.Response;
 import com.kc.cloud.labs.aws.utils.BalanceDao;
+import com.kc.cloud.models.ResponseObject;
 import com.kc.cloud.util.ConvertDataUtil;
 
 
@@ -29,8 +29,8 @@ public class LabsBalancesGETAll implements RequestStreamHandler {
         outputStream.write(jsonResponse.getBytes());
     }
 
-    public Response<List<Balance>> getResponse(List<Balance> balances) throws JsonProcessingException {
-        Response<List<Balance>> response = new Response<>();
+    public ResponseObject<List<Balance>> getResponse(List<Balance> balances) throws JsonProcessingException {
+        ResponseObject<List<Balance>> response = new ResponseObject<>();
         response.setStatusCode(200);
         response.setBody(balances);
         return response;

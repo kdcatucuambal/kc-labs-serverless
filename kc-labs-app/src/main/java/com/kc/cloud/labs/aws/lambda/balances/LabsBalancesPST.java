@@ -4,9 +4,9 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.kc.cloud.labs.aws.models.app.Balance;
-import com.kc.cloud.labs.aws.models.app.Response;
-import com.kc.cloud.labs.aws.models.request.RequestObject;
 import com.kc.cloud.labs.aws.utils.BalanceDao;
+import com.kc.cloud.models.RequestObject;
+import com.kc.cloud.models.ResponseObject;
 import com.kc.cloud.util.ConvertDataUtil;
 
 import java.io.*;
@@ -34,8 +34,8 @@ public class LabsBalancesPST implements RequestStreamHandler {
         outputStream.write(jsonResponse.getBytes());
     }
 
-    public Response<Balance> getResponse(Balance balance) {
-        Response<Balance> response = new Response<>();
+    public ResponseObject<Balance> getResponse(Balance balance) {
+        ResponseObject<Balance> response = new ResponseObject<>();
         response.setStatusCode(201);
         response.setBody(balance);
         return response;
