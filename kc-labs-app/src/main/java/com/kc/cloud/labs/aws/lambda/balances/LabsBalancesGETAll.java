@@ -5,12 +5,14 @@ import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kc.cloud.labs.aws.models.app.Balance;
 import com.kc.cloud.labs.aws.utils.BalanceDao;
+import com.kc.cloud.models.RequestObject;
 import com.kc.cloud.models.ResponseObject;
 import com.kc.cloud.util.ConvertDataUtil;
 
 
 import java.io.*;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 public class LabsBalancesGETAll implements RequestStreamHandler {
@@ -23,7 +25,12 @@ public class LabsBalancesGETAll implements RequestStreamHandler {
         logger.info("Invoking lambda: LabsBalancesGETAll");
         String request = ConvertDataUtil.convertInputStreamToString(inputStream);
         logger.info("Request: " + request);
-        List<Balance> balances = this.balanceV2Dao.findAll();
+
+        RequestObject<?> requestObject = ConvertDataUtil.deserializeObject(request, RequestObject.class);
+        Map<String, String> queries = requestObject.getGetbody().getQueries();
+
+        List<Balance> balances = this.balanceV2Dao.findAll(queries.get("page"));
+
         String jsonResponse = ConvertDataUtil.serializeObject(this.getResponse(balances));
         logger.info("Response: " + jsonResponse);
         outputStream.write(jsonResponse.getBytes());
