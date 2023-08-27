@@ -55,6 +55,10 @@ echo "[EXEC] mvn dependency:copy-dependencies -DoutputDirectory=dependencies/jav
 mvn dependency:copy-dependencies -DoutputDirectory=dependencies/java/lib -Dmdep.prependGroupId=true -DexcludeScope=provided
 ls -la
 
-cd ../
+cp ../README.md target/README.md
+cd target
+zip empty_function_code.zip README.md
+rm README.md
+cd ../../
 
 echo "Finish build.sh successfully!"

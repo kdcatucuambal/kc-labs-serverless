@@ -82,13 +82,16 @@ Conditions:
 
 Globals:
   Function:
-    CodeUri: target/original-kc-labs-app-1.0.jar
+    CodeUri: target/empty_function_code.zip
+    Handler: io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handleRequest
     Timeout: 20
     Tracing: Active
     Runtime: java11
-    MemorySize: 512
+    MemorySize: 768
     Architectures:
-      - x86_64
+      - arm64
+    Layers:
+      - !Ref LabsLayer
     Environment:
       Variables:
         message: "Hello from Lambda"
@@ -186,10 +189,7 @@ Resources:
   LabsProductsGETByIdLambda:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: com.kc.cloud.labs.aws.lambda.products.LabsProductsGETById::handleRequest
       FunctionName: !Sub "${EnvironmentId}-LabsProductsGETByIdLambda"
-      Layers:
-        - !Ref LabsLayer
       Role: !Ref LabsRoleArn
       AutoPublishAlias: !Ref LambdaAliasBeta
       Environment:
@@ -234,10 +234,7 @@ Resources:
   LabsProductsGETAllLambda:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: com.kc.cloud.labs.aws.lambda.products.LabsProductsGETAll::handleRequest
       FunctionName: !Sub "${EnvironmentId}-LabsProductsGETAllLambda"
-      Layers:
-        - !Ref LabsLayer
       Role: !Ref LabsRoleArn
       AutoPublishAlias: !Ref LambdaAliasBeta
       Environment:
@@ -282,10 +279,7 @@ Resources:
   LabsProductsPSTLambda:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: com.kc.cloud.labs.aws.lambda.products.LabsProductsPST::handleRequest
       FunctionName: !Sub "${EnvironmentId}-LabsProductsPSTLambda"
-      Layers:
-        - !Ref LabsLayer
       Role: !Ref LabsRoleArn
       AutoPublishAlias: !Ref LambdaAliasBeta
       Environment:
@@ -330,10 +324,7 @@ Resources:
   LabsProductsDELLambda:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: com.kc.cloud.labs.aws.lambda.products.LabsProductsDEL::handleRequest
       FunctionName: !Sub "${EnvironmentId}-LabsProductsDELLambda"
-      Layers:
-        - !Ref LabsLayer
       Role: !Ref LabsRoleArn
       AutoPublishAlias: !Ref LambdaAliasBeta
       Environment:

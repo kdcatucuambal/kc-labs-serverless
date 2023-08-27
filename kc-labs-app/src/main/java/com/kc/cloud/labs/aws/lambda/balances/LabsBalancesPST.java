@@ -10,9 +10,14 @@ import com.kc.cloud.models.RequestObject;
 import com.kc.cloud.models.ResponseObject;
 import com.kc.cloud.util.ConvertDataUtil;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.*;
 import java.util.logging.Logger;
 
+
+@Named("LabsBalancesPST")
+@Singleton
 public class LabsBalancesPST implements RequestStreamHandler {
 
     private static final Logger logger = Logger.getLogger(LabsBalancesPST.class.getName());

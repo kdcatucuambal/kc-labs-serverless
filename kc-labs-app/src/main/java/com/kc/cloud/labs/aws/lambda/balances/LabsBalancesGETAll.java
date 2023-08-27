@@ -11,11 +11,16 @@ import com.kc.cloud.util.ConvertDataUtil;
 import com.kc.cloud.util.ValidateUtil;
 
 
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler;
 
+@Named("LabsBalancesGETAll")
+@Singleton
 public class LabsBalancesGETAll implements RequestStreamHandler {
 
     private static final Logger logger = Logger.getLogger(LabsBalancesGETAll.class.getName());

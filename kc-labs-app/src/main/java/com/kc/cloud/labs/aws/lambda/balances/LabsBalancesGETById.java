@@ -9,6 +9,8 @@ import com.kc.cloud.models.ResponseObject;
 import com.kc.cloud.util.ConvertDataUtil;
 
 
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -16,7 +18,8 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 
-
+@Named("LabsBalancesGETById")
+@Singleton
 public class LabsBalancesGETById implements RequestStreamHandler {
 
     private static final Logger logger = Logger.getLogger(LabsBalancesGETById.class.getName());

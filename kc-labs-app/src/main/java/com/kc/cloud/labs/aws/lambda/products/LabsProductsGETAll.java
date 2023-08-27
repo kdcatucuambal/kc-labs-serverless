@@ -8,12 +8,16 @@ import com.kc.cloud.labs.aws.utils.KcUtil;
 import com.kc.cloud.models.ResponseObject;
 import com.kc.cloud.util.ConvertDataUtil;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.logging.Logger;
 
+@Named("LabsProductsGETAll")
+@Singleton
 public class LabsProductsGETAll implements RequestStreamHandler {
 
     Logger logger = Logger.getLogger(LabsProductsGETAll.class.getName());

@@ -82,12 +82,11 @@ Resources:
     Properties:
       LayerName: !Sub "${EnvironmentId}-LabsLayer"
       Description: Layer libs for kc-labs-serverless
-      ContentUri: ../kc-labs-app/dependencies
+      ContentUri: ../kc-labs-app/target/kc-labs-app-1.0-aws.jar
       CompatibleRuntimes:
         - java11
-        - java8
       CompatibleArchitectures:
-        - x86_64
+        - arm64
       LicenseInfo: "MIT"
       RetentionPolicy: Retain
 
@@ -170,10 +169,7 @@ Resources:
         LabsRoleArn: !GetAtt LabsRole.Arn
         LabsLayer: !Ref LabsLayer
         SecretName: !Ref SecretName
-        CustomDomainName: !If 
-          - WithCustomDomain
-          - !Ref CustomDomainName
-          - !Ref AWS::NoValue
+        CustomDomainName: !Ref CustomDomainName
         PublicCertificateArn: !Ref PublicCertificateArn
         ApiGatewayResponseMessage400: !Ref ApiGatewayResponseMessage400
         ApiGatewayResponseMessage401: !Ref ApiGatewayResponseMessage401
@@ -197,10 +193,7 @@ Resources:
         ProvisionedConcurrencyConfigEnabled: !Ref ProvisionedConcurrencyConfigEnabled
         LabsRoleArn: !GetAtt LabsRole.Arn
         LabsLayer: !Ref LabsLayer
-        CustomDomainName: !If 
-          - WithCustomDomain
-          - !Ref CustomDomainName
-          - !Ref AWS::NoValue
+        CustomDomainName: !Ref CustomDomainName
         PublicCertificateArn: !Ref PublicCertificateArn
         ApiGatewayResponseMessage400: !Ref ApiGatewayResponseMessage400
         ApiGatewayResponseMessage401: !Ref ApiGatewayResponseMessage401
