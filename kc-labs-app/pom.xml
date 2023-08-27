@@ -13,7 +13,7 @@
     </properties>
 
     <dependencies>
-        <dependency>
+        <!-- <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-lambda-java-core</artifactId>
             <version>1.2.1</version>
@@ -22,7 +22,7 @@
           <groupId>com.amazonaws</groupId>
           <artifactId>aws-lambda-java-events</artifactId>
           <version>3.11.0</version>
-        </dependency>
+        </dependency> -->
         <dependency>
           <groupId>junit</groupId>
           <artifactId>junit</artifactId>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>com.kc.cloud</groupId>
             <artifactId>kc-cloud-core-util</artifactId>
-            <version>0.0.4-KEC-SNAPSHOT</version>
+            <version>0.0.5-KEC-SNAPSHOT</version>
         </dependency>
 
         <dependency>

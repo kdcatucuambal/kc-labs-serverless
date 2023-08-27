@@ -338,6 +338,22 @@ Resources:
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${LabsApiGateway}*/*/*"
 
 
+  LabsTestLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: com.kc.cloud.lambda.KcBaseHandler::handleRequest
+      FunctionName: !Sub "${EnvironmentId}-LabsTestLambda"
+      Layers:
+        - !Ref LabsLayer
+      Role: !Ref LabsRoleArn
+      AutoPublishAlias: !Ref LambdaAliasBeta
+      Environment:
+        Variables:
+          PARAM1: VALUE
+          JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+          DB_TARGET: readReplica
+
+
 Outputs:
   ApiId:
     Description: API Gateway ID
