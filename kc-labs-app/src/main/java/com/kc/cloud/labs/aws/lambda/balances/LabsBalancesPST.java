@@ -28,10 +28,10 @@ public class LabsBalancesPST implements RequestStreamHandler {
         String jsonRequest = ConvertDataUtil.convertInputStreamToString(inputStream);
         logger.info("Request: " + jsonRequest);
         RequestObject<Balance> requestObject = ConvertDataUtil.deserializeObject(jsonRequest, new TypeReference<RequestObject<Balance>>() {});
-        boolean balanceCreated = balanceV2Dao.save(requestObject.getBody());
-        logger.info("Balance created: " + balanceCreated);
+        balanceV2Dao.save(requestObject.getBody());
+        logger.info("Balance created");
         MessageResponse mr = new MessageResponse();
-        mr.setMessage(balanceCreated ? "Balance created successfully!" : "Something goes wrong");
+        mr.setMessage("Balance created successfully!");
         String jsonResponse = ConvertDataUtil.serializeObject(this.getResponse(mr));
         logger.info("Response: " + jsonResponse);
         outputStream.write(jsonResponse.getBytes());
