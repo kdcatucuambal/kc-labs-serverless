@@ -10,8 +10,10 @@ import java.util.logging.Logger;
 
 
 public class KcUtil {
+
     private final static Logger logger = Logger.getLogger(KcUtil.class.getName());
     private final static ApiGatewayUtil apiGatewayUtil = new ApiGatewayUtil();
+    
     public static String getAiKeyValue(){
         logger.info("ApiGateway Client Ref: " + apiGatewayUtil);
         String apiKeyId = System.getenv("API_KEY_ID");
