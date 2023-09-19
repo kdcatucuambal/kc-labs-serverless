@@ -1,0 +1,62 @@
+{
+    "parameters": {
+      "author": "Kevin Catucuamba",
+      "email": "catucuambakevin@gmail.com",
+      "EnvironmentId": "dev1",
+      "Module": "labs"
+    },
+    "pipeline": {
+      "project": {
+        "project-key": "kc-lab-serverless",
+        "path-service": "kc-labs-app",
+        "backend-branch": "develop",
+        "hosted-zone-id": "Z09665002K7X5THA6XUVX"
+      },
+      "deploy": {
+        "stack-name": "${EnvironmentId}-labs-serverless",
+        "s3-bucket": "dev1-kc-labs-serverless",
+        "prefix": "${EnvironmentId}",
+        "aws-default-region": "us-east-1",
+        "capabilities": "CAPABILITY_AUTO_EXPAND CAPABILITY_IAM CAPABILITY_NAMED_IAM",
+        "non-confirm-change-set": "true",
+        "parameters": [
+          {
+            "parameterKey": "EnvironmentId",
+            "parameterValue": "${EnvironmentId}"
+          },
+          {
+            "parameterKey": "LambdaAliasProduction",
+            "parameterValue": "production"
+          },
+          {
+            "parameterKey": "LambdaAliasBeta",
+            "parameterValue": "beta"
+          },
+          {
+            "parameterKey": "LogRetentionInDays",
+            "parameterValue": 5
+          },
+          {
+            "parameterKey": "LambdaAuthorizer",
+            "parameterValue": "dev1-AuthorizerLambda"
+          },
+          {
+            "parameterKey": "ProvisionedConcurrencyConfigEnabled",
+            "parameterValue": "false"
+          },
+          {
+            "parameterKey": "CustomDomainName",
+            "parameterValue": "${Module}-${EnvironmentId}.megapro.site"
+          },
+          {
+            "parameterKey": "PublicCertificateArn",
+            "parameterValue": "arn:aws:acm:us-east-1:818802851925:certificate/7799a8b0-a3fe-4820-a645-e883cfb599d1"
+          },
+          {
+            "parameterKey": "SecretName",
+            "parameterValue": "dev1/credentials/database"
+          }
+        ]
+      }
+    }
+  }
