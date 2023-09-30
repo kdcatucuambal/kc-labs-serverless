@@ -34,9 +34,9 @@ public class LabsProductsGETById implements RequestStreamHandler {
         Map<String, String> params = requestObject.getGetbody().getParams();
         Product productFound = productService.getById(params.get("id"));
         String jsonResponse = ConvertDataUtil.serializeObject(getResponse(productFound));
-        logger.info("Response json: " + jsonResponse);
-        String apiKey = KcUtil.getAiKeyValue();
-        logger.info("API Key (Lambda): " + apiKey);
+//        logger.info("Response json: " + jsonResponse);
+//        String apiKey = KcUtil.getAiKeyValue();
+//        logger.info("API Key (Lambda): " + apiKey);
         outputStream.write(jsonResponse.getBytes());
     }
 

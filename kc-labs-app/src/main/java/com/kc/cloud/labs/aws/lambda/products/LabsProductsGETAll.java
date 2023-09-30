@@ -31,8 +31,8 @@ public class LabsProductsGETAll implements RequestStreamHandler {
         logger.info("Response Object: " + responseObject);
         String jsonResponse = ConvertDataUtil.serializeObject(responseObject);
         logger.info("Response: " + jsonResponse);
-        String apiKey = KcUtil.getAiKeyValue();
-        logger.info("API Key (Lambda): " + apiKey);
+//        String apiKey = KcUtil.getAiKeyValue();
+//        logger.info("API Key (Lambda): " + apiKey);
         outputStream.write(jsonResponse.getBytes());
     }
 
