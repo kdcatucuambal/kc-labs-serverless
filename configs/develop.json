@@ -42,7 +42,7 @@
         },
         {
           "parameterKey": "LambdaAuthorizer",
-          "parameterValue": "${${EnvironmentIdBase}-labs-serverless:AuthorizerLambdaName}"
+          "parameterValue": "${${EnvironmentIdBase}-authentication-serverless:AuthorizerLambdaName}"
         },
         {
           "parameterKey": "ProvisionedConcurrencyConfigEnabled",
