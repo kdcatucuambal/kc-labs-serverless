@@ -1,10 +1,23 @@
 openapi: 3.0.1
 info:
   title:
-    Fn::Sub: ${EnvironmentId} - labs-products-api
+    Fn::Sub: ${EnvironmentId} - LABS Products Managmenet API
   version: 0.0.1
   description: |
     This is the API for the products service. It is used to manage products.
+  contact:
+    name: Kinetica Labs
+    url: https://www.kineticalabs.com
+    email: contact@kinetica-labs.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+
+servers:
+  - url: https://api1.kineticalabs.com/labs/products
+    description: Production server
+  - url: https://api2.kineticalabs.com/labs/products
+    description: Staging server
 
 x-amazon-apigateway-request-validators:
   all:
@@ -14,6 +27,10 @@ x-amazon-apigateway-request-validators:
     validateRequestBody: false
     validateRequestParameters: true
 
+tags:
+  - name: Products
+    description: API for managing products
+
 
 paths:
   /labs/products/{id}:
@@ -22,6 +39,8 @@ paths:
         - api_key: [ ]
         - authorizer: [ ]
       x-amazon-apigateway-request-validator: all
+      tags:
+        - Products
       summary: Return a product by id
       description: Return a product by id
       operationId: LabsProductGETById
@@ -43,14 +62,11 @@ paths:
           description: OK
           headers:
             Access-Control-Allow-Methods:
-              schema:
-                type: string
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/Access-Control-Allow-Methods'
             Access-Control-Allow-Origin:
-              schema:
-                type: string
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/Access-Control-Allow-Origin'
             Access-Control-Allow-Headers:
-              schema:
-                type: string
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/Access-Control-Allow-Headers'
             x-jws-signature:
               $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/x-jws-signature'
             Content-Language:
@@ -205,6 +221,8 @@ paths:
         - api_key: [ ]
         - authorizer: [ ]
       x-amazon-apigateway-request-validator: all
+      tags:
+        - Products
       summary: Delete a product by id
       description: Delete a product by id
       operationId: LabsProductDEL
@@ -225,14 +243,11 @@ paths:
           description: OK
           headers:
             Access-Control-Allow-Methods:
-              schema:
-                type: string
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/Access-Control-Allow-Methods'
             Access-Control-Allow-Origin:
-              schema:
-                type: string
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/Access-Control-Allow-Origin'
             Access-Control-Allow-Headers:
-              schema:
-                type: string
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/Access-Control-Allow-Headers'
             x-jws-signature:
               $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/x-jws-signature'
             Content-Language:
@@ -387,6 +402,8 @@ paths:
         - api_key: [ ]
         - authorizer: [ ]
       x-amazon-apigateway-request-validator: all
+      tags:
+        - Products
       summary: Return all products
       description: Return all products
       operationId: LabsProductGETAll
@@ -401,14 +418,11 @@ paths:
           description: OK
           headers:
             Access-Control-Allow-Methods:
-              schema:
-                type: string
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/Access-Control-Allow-Methods'
             Access-Control-Allow-Origin:
-              schema:
-                type: string
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/Access-Control-Allow-Origin'
             Access-Control-Allow-Headers:
-              schema:
-                type: string
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/Access-Control-Allow-Headers'
             x-jws-signature:
               $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/x-jws-signature'
             Content-Language:
@@ -564,6 +578,8 @@ paths:
         - api_key: [ ]
         - authorizer: [ ]
       x-amazon-apigateway-request-validator: all
+      tags:
+        - Products
       summary: Add a new product to the store
       description: Add a new product to the store
       operationId: LabsProductPST
@@ -585,14 +601,11 @@ paths:
           description: OK
           headers:
             Access-Control-Allow-Methods:
-              schema:
-                type: string
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/Access-Control-Allow-Methods'
             Access-Control-Allow-Origin:
-              schema:
-                type: string
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/Access-Control-Allow-Origin'
             Access-Control-Allow-Headers:
-              schema:
-                type: string
+              $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/Access-Control-Allow-Headers'
             x-jws-signature:
               $ref: 'KCGeneralComponents-v0-0-1.yaml#/components/headers/x-jws-signature'
             Content-Language:

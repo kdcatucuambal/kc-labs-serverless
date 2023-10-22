@@ -158,7 +158,7 @@ Resources:
         Fn::Transform:
           Name: AWS::Include
           Parameters:
-            Location: ../.stack/specs/balances/KCLabsBalancesAPI-resolved.yaml
+            Location: ../.stack/specs/balances/v1/KCLabsBalancesAPI-resolved.yaml
       MethodSettings:
         - ResourcePath: "/*"
           HttpMethod: "*"

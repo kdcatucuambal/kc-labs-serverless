@@ -153,7 +153,7 @@ Resources:
         Fn::Transform:
           Name: AWS::Include
           Parameters:
-            Location: ../.stack/specs/products/KCLabsProductsAPI-resolved.yaml
+            Location: ../.stack/specs/products/v1/KCLabsProductsAPI-resolved.yaml
       MethodSettings:
         - ResourcePath: "/*"
           HttpMethod: "*"
