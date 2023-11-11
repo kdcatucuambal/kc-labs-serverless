@@ -28,7 +28,9 @@ public class ProductService {
 
     public Product getById(String id){
         Key key = Key.builder().partitionValue(id).build();
-        return table.getItem(key);
+        Product product = table.getItem(key);
+        logger.info("Product info: " + product);
+        return product;
     }
 
     public boolean saveOrUpdate(Product product){
