@@ -30,6 +30,9 @@ public class ProductService {
         Key key = Key.builder().partitionValue(id).build();
         Product product = table.getItem(key);
         logger.info("Product info: " + product);
+        if (product == null){
+            throw new RuntimeException("409", new Throwable("Product not found!"));
+        }
         return product;
     }
 
@@ -44,15 +47,15 @@ public class ProductService {
         }
     }
 
-    public boolean deleteById(String id){
+    public void deleteById(String id){
         try {
             Key key = Key.builder().partitionValue(id).build();
-            table.deleteItem(key);
-            return true;
+            Product p = table.deleteItem(key);
+            logger.info("Product deleted: " + p);
         }
         catch (Exception e){
             logger.severe(e.getMessage());
-            return false;
+            throw new RuntimeException("404", new Throwable("Product not found!"));
         }
     }
 
