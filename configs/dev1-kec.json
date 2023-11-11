@@ -7,7 +7,7 @@
     "Module": "labs"
   },
   "stack-outputs": [
-    "${EnvironmentIdBase}-authentication-serverless"
+    "dev2-authentication-serverless"
   ],
   "pipeline": {
     "project": {
