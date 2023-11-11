@@ -17,7 +17,7 @@ public class ProductService {
     private static final DynamoDbTable<Product> table = DynamoDb.getEnhancedClient()
             .table(System.getenv("PRODUCTS_TABLE"), TableSchema.fromBean(Product.class));
 
-    public List<Product> getAll(){
+    public List<Product> getAll() {
         SdkIterable<Product> products = table.scan().items();
         List<Product> productList = new ArrayList<>();
         for (Product product : products) {
@@ -26,37 +26,35 @@ public class ProductService {
         return productList;
     }
 
-    public Product getById(String id){
+    public Product getById(String id) {
         Key key = Key.builder().partitionValue(id).build();
         Product product = table.getItem(key);
         logger.info("Product info: " + product);
-        if (product == null){
-            throw new RuntimeException("409", new Throwable("Product not found!"));
+        if (product == null) {
+            throw new RuntimeException("404");
         }
         return product;
     }
 
-    public boolean saveOrUpdate(Product product){
+    public boolean saveOrUpdate(Product product) {
         try {
             table.putItem(product);
             return true;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             logger.severe(e.getMessage());
-            return false;
+            throw new RuntimeException("409", new Throwable(e.getMessage()));
         }
     }
 
-    public void deleteById(String id){
-        try {
-            Key key = Key.builder().partitionValue(id).build();
-            Product p = table.deleteItem(key);
-            logger.info("Product deleted: " + p);
+    public void deleteById(String id) {
+
+        Key key = Key.builder().partitionValue(id).build();
+        Product p = table.deleteItem(key);
+        logger.info("Product deleted: " + p);
+        if (p == null) {
+            throw new RuntimeException("404");
         }
-        catch (Exception e){
-            logger.severe(e.getMessage());
-            throw new RuntimeException("404", new Throwable("Product not found!"));
-        }
+
     }
 
 }

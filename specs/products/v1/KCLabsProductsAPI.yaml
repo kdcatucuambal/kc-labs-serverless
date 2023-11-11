@@ -148,7 +148,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "El mensaje de solicitud no se encuentra debidamente formateado."}
+                {"message": "The request is not well formed."}
           401:
             statusCode: 401
             responseParameters:
@@ -158,7 +158,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "No se encuentra autorizado para realizar la operación."}
+                {"message": "You are not authorized to perform this operation."}
 
           403:
             statusCode: 403
@@ -169,7 +169,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "La solicitud ha sido rechazada."}
+                {"message": "The request has been rejected."}
 
           404:
             statusCode: 404
@@ -196,7 +196,6 @@ paths:
                   "message": "The request could not be completed successfully.",
                   "error" : $cause
                 }
-#                {"message": "La operación presentó un error durante la ejecución."}
 
           429:
             statusCode: 429
@@ -207,7 +206,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "Se ha excedido el número de solicitudes permitidas."}
+                {"message": "The number of allowed requests has been exceeded."}
 
           500|.*timed.*:
             statusCode: 500
@@ -334,7 +333,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "El mensaje de solicitud no se encuentra debidamente formateado."}
+                {"message": "The request is not well formed."}
           401:
             statusCode: 401
             responseParameters:
@@ -344,7 +343,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "No se encuentra autorizado para realizar la operación."}
+                {"message": "You are not authorized to perform this operation."}
 
           403:
             statusCode: 403
@@ -355,7 +354,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "La solicitud ha sido rechazada."}
+                {"message": "The request has been rejected."}
 
           404:
             statusCode: 404
@@ -366,7 +365,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "El objeto no fue encontrado."}
+                {"message": "The requested resource could not be found."}
 
           409:
             statusCode: 409
@@ -377,7 +376,11 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "La operación presentó un error durante la ejecución. :)"}
+                #set($cause = $input.path('$.cause'))
+                {
+                  "message": "The request could not be completed successfully.",
+                  "error" : $cause
+                }
 
           429:
             statusCode: 429
@@ -388,7 +391,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "Se ha excedido el número de solicitudes permitidas."}
+                {"message": "The number of allowed requests has been exceeded."}
 
           500|.*timed.*:
             statusCode: 500
@@ -509,7 +512,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "El mensaje de solicitud no se encuentra debidamente formateado."}
+                {"message": "The request is not well formed."}
           401:
             statusCode: 401
             responseParameters:
@@ -519,7 +522,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "No se encuentra autorizado para realizar la operación."}
+                {"message": "You are not authorized to perform this operation."}
 
           403:
             statusCode: 403
@@ -530,7 +533,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "La solicitud ha sido rechazada."}
+                {"message": "The request has been rejected."}
 
           404:
             statusCode: 404
@@ -541,7 +544,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "El objeto no fue encontrado."}
+                {"message": "The requested resource could not be found."}
 
           409:
             statusCode: 409
@@ -552,7 +555,11 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "La operación presentó un error durante la ejecución. :)"}
+                #set($cause = $input.path('$.cause'))
+                {
+                  "message": "The request could not be completed successfully.",
+                  "error" : $cause
+                }
 
           429:
             statusCode: 429
@@ -563,7 +570,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "Se ha excedido el número de solicitudes permitidas."}
+                {"message": "The number of allowed requests has been exceeded."}
 
           500|.*timed.*:
             statusCode: 500
@@ -692,7 +699,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "El mensaje de solicitud no se encuentra debidamente formateado."}
+                {"message": "The request is not well formed."}
           401:
             statusCode: 401
             responseParameters:
@@ -702,7 +709,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "No se encuentra autorizado para realizar la operación."}
+                {"message": "You are not authorized to perform this operation."}
 
           403:
             statusCode: 403
@@ -713,7 +720,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "La solicitud ha sido rechazada."}
+                {"message": "The request has been rejected."}
 
           404:
             statusCode: 404
@@ -724,7 +731,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "El objeto no fue encontrado."}
+                {"message": "The requested resource could not be found."}
 
           409:
             statusCode: 409
@@ -735,7 +742,10 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "La operación presentó un error durante la ejecución. :)"}
+                {
+                  "message": "The request could not be completed successfully.",
+                  "error" : $cause
+                }
 
           429:
             statusCode: 429
@@ -746,7 +756,7 @@ paths:
             responseTemplates:
               application/json: |-
                 #set($res = $input.path('$'))
-                {"message": "Se ha excedido el número de solicitudes permitidas."}
+                {"message": "The number of allowed requests has been exceeded."}
 
           500|.*timed.*:
             statusCode: 500
