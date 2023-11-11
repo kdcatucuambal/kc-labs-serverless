@@ -2,9 +2,13 @@
   "parameters": {
     "author": "Kevin Catucuamba",
     "email": "catucuambakevin@gmail.com",
-    "EnvironmentId": "kec",
+    "EnvironmentId": "kec1",
+    "EnvironmentIdBase": "dev1",
     "Module": "labs"
   },
+  "stack-outputs": [
+    "${EnvironmentIdBase}-authentication-serverless"
+  ],
   "pipeline": {
     "project": {
       "project-key": "kc-lab-serverless",
@@ -38,7 +42,7 @@
         },
         {
           "parameterKey": "LambdaAuthorizer",
-          "parameterValue": "dev1-AuthorizerLambda"
+          "parameterValue": "${${EnvironmentIdBase}-authentication-serverless:AuthorizerLambdaName}"
         },
         {
           "parameterKey": "ProvisionedConcurrencyConfigEnabled",
@@ -46,15 +50,15 @@
         },
         {
           "parameterKey": "CustomDomainName",
-          "parameterValue": "${Module}-${EnvironmentId}.megapro.site"
+          "parameterValue": ""
         },
         {
           "parameterKey": "PublicCertificateArn",
-          "parameterValue": "arn:aws:acm:us-east-1:818802851925:certificate/7799a8b0-a3fe-4820-a645-e883cfb599d1"
+          "parameterValue": ""
         },
         {
           "parameterKey": "SecretName",
-          "parameterValue": "dev1/credentials/database"
+          "parameterValue": "${EnvironmentIdBase}/credentials/database"
         }
       ]
     }
