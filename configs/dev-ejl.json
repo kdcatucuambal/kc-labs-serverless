@@ -6,9 +6,6 @@
       "EnvironmentIdBase": "dev1",
       "Module": "labs"
     },
-    "stack-outputs": [
-      "${EnvironmentIdBase}-authentication-serverless"
-    ],
     "pipeline": {
       "project": {
         "project-key": "kc-lab-serverless",
