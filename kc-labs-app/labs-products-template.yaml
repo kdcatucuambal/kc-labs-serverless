@@ -97,7 +97,7 @@ Globals:
 
   Api:
     OpenApiVersion: 3.0.1
-    TracingEnabled: True
+    TracingEnabled: False
     GatewayResponses:
       DEFAULT_4XX:
         StatusCode: "400"
