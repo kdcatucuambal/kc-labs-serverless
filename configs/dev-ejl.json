@@ -1,0 +1,65 @@
+{
+    "parameters": {
+      "author": "Kevin Catucuamba",
+      "email": "catucuambakevin@gmail.com",
+      "EnvironmentId": "ejl1",
+      "EnvironmentIdBase": "dev1",
+      "Module": "labs"
+    },
+    "stack-outputs": [
+    ],
+    "pipeline": {
+      "project": {
+        "project-key": "kc-lab-serverless",
+        "path-service": "kc-labs-app",
+        "backend-branch": "develop",
+        "hosted-zone-id": "Z09665002K7X5THA6XUVX"
+      },
+      "deploy": {
+        "stack-name": "${EnvironmentId}-labs-serverless",
+        "s3-bucket": "ejl1-labs-base",
+        "prefix": "${EnvironmentId}",
+        "aws-default-region": "us-east-1",
+        "capabilities": "CAPABILITY_AUTO_EXPAND CAPABILITY_IAM CAPABILITY_NAMED_IAM",
+        "non-confirm-change-set": "true",
+        "parameters": [
+          {
+            "parameterKey": "EnvironmentId",
+            "parameterValue": "${EnvironmentId}"
+          },
+          {
+            "parameterKey": "LambdaAliasProduction",
+            "parameterValue": "production"
+          },
+          {
+            "parameterKey": "LambdaAliasBeta",
+            "parameterValue": "beta"
+          },
+          {
+            "parameterKey": "LogRetentionInDays",
+            "parameterValue": 5
+          },
+          {
+            "parameterKey": "LambdaAuthorizer",
+            "parameterValue": "dev1-labs-authentication-serverless"
+          },
+          {
+            "parameterKey": "ProvisionedConcurrencyConfigEnabled",
+            "parameterValue": "false"
+          },
+          {
+            "parameterKey": "CustomDomainName",
+            "parameterValue": ""
+          },
+          {
+            "parameterKey": "PublicCertificateArn",
+            "parameterValue": ""
+          },
+          {
+            "parameterKey": "SecretName",
+            "parameterValue": "${EnvironmentIdBase}/credentials/database"
+          }
+        ]
+      }
+    }
+  }

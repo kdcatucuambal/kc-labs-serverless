@@ -12,13 +12,14 @@ parameters:
 pool: 'Azure Pipelines'
 
 variables:
-  - group: GENERAL_DEVOPS
+  - group: GENERAL_DEVOPS_EJL
 
 trigger:
   branches:
     include:
       - develop
       - dev1-kec
+      - dev-ejl
 
 
 resources:
@@ -26,7 +27,7 @@ resources:
     - repository: templates
       type: git
       name: 'kc-cloud-devops'
-      ref: 'refs/tags/v0.0.2'
+      ref: 'dev1-ejl'
 
 stages:
   - template: templates/stages/microserviceStage.yml@templates
