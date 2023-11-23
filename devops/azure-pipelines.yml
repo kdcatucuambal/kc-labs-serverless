@@ -21,7 +21,6 @@ trigger:
       - dev1-kec
       - dev-ejl
 
-
 resources:
   repositories:
     - repository: templates
