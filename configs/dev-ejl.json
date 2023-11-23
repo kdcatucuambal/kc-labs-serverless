@@ -15,7 +15,7 @@
       },
       "deploy": {
         "stack-name": "${EnvironmentId}-labs-serverless",
-        "s3-bucket": "ejl1-labs-base",
+        "s3-bucket": "ejl2-labs-base",
         "prefix": "${EnvironmentId}",
         "aws-default-region": "us-east-1",
         "capabilities": "CAPABILITY_AUTO_EXPAND CAPABILITY_IAM CAPABILITY_NAMED_IAM",
