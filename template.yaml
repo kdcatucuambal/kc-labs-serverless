@@ -40,7 +40,6 @@ Parameters:
     Type: String
     Description: Secret Name
 
-
 Resources:
   LambdasInfraestructure:
     Type: AWS::Serverless::Application
