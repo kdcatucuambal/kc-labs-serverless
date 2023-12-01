@@ -4,6 +4,7 @@
       "email": "catucuambakevin@gmail.com",
       "EnvironmentId": "api-test",
       "EnvironmentIdBase": "dev1",
+      "Notes": "This branch is for testing purposes only. No merge to develop or master is allowed.",
       "Module": "labs"
     },
     "stack-outputs": [

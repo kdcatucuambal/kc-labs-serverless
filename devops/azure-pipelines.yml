@@ -19,6 +19,7 @@ trigger:
     include:
       - develop
       - dev1-kec
+      - api-test
 
 
 resources:
