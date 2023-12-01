@@ -1,0 +1,66 @@
+{
+    "parameters": {
+      "author": "Kevin Catucuamba",
+      "email": "catucuambakevin@gmail.com",
+      "EnvironmentId": "api-test",
+      "EnvironmentIdBase": "dev1",
+      "Module": "labs"
+    },
+    "stack-outputs": [
+      "${EnvironmentIdBase}-authentication-serverless"
+    ],
+    "pipeline": {
+      "project": {
+        "project-key": "kc-lab-serverless",
+        "path-service": "kc-labs-app",
+        "backend-branch": "develop",
+        "hosted-zone-id": "Z09665002K7X5THA6XUVX"
+      },
+      "deploy": {
+        "stack-name": "${EnvironmentId}-labs-serverless",
+        "s3-bucket": "dev1-kc-labs-serverless",
+        "prefix": "${EnvironmentId}",
+        "aws-default-region": "us-east-1",
+        "capabilities": "CAPABILITY_AUTO_EXPAND CAPABILITY_IAM CAPABILITY_NAMED_IAM",
+        "non-confirm-change-set": "true",
+        "parameters": [
+          {
+            "parameterKey": "EnvironmentId",
+            "parameterValue": "${EnvironmentId}"
+          },
+          {
+            "parameterKey": "LambdaAliasProduction",
+            "parameterValue": "production"
+          },
+          {
+            "parameterKey": "LambdaAliasBeta",
+            "parameterValue": "beta"
+          },
+          {
+            "parameterKey": "LogRetentionInDays",
+            "parameterValue": 5
+          },
+          {
+            "parameterKey": "LambdaAuthorizer",
+            "parameterValue": "${${EnvironmentIdBase}-authentication-serverless:AuthorizerLambdaName}"
+          },
+          {
+            "parameterKey": "ProvisionedConcurrencyConfigEnabled",
+            "parameterValue": "false"
+          },
+          {
+            "parameterKey": "CustomDomainName",
+            "parameterValue": ""
+          },
+          {
+            "parameterKey": "PublicCertificateArn",
+            "parameterValue": ""
+          },
+          {
+            "parameterKey": "SecretName",
+            "parameterValue": "${EnvironmentIdBase}/credentials/database"
+          }
+        ]
+      }
+    }
+  }
